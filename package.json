@@ -11,6 +11,6 @@
     "ucli": "./index.js"
   },
   "dependencies": {
-    "commander": "^11.0.0"
+    "commander": "^14.0.3"
   }
 }
