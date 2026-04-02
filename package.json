@@ -1,0 +1,16 @@
+{
+  "name": "universal-cli",
+  "version": "1.0.0",
+  "description": "Universal wrapper CLI with Node.js and Python clustering",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "create-shortcut": "powershell -ExecutionPolicy Bypass -File ./create-shortcut.ps1"
+  },
+  "bin": {
+    "ucli": "./index.js"
+  },
+  "dependencies": {
+    "commander": "^11.0.0"
+  }
+}
