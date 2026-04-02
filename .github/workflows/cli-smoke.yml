@@ -1,0 +1,28 @@
+name: CLI Smoke Test
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  smoke:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Install Node dependencies
+        run: npm ci
+      - name: Launch CLI help
+        run: node index.js --help
+      - name: Launch cluster backend
+        run: node index.js cluster --type docker --workers 1
+      - name: Create Python venv
+        run: node index.js venv .venv-smoke
