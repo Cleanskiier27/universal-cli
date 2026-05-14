@@ -16,7 +16,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Restore cache (initial)
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .cache/linux-${{ github.event.inputs.kernel_version }}
           key: linux-kernel-${{ github.event.inputs.kernel_version }}-${{ runner.os }}-v1
@@ -37,7 +37,7 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Restore cache (verify)
-        uses: actions/cache@v4
+        uses: actions/cache@v5
         with:
           path: .cache/linux-${{ github.event.inputs.kernel_version }}
           key: linux-kernel-${{ github.event.inputs.kernel_version }}-${{ runner.os }}-v1
