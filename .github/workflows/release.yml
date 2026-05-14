@@ -20,7 +20,7 @@ jobs:
       - name: Run dist script
         run: npm run dist:zip
       - name: Upload artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dist-zip
           path: dist/*.zip
@@ -45,7 +45,7 @@ jobs:
           powershell -ExecutionPolicy Bypass -File scripts/installer/convert-icon.ps1 || echo "convert skipped"
           npm run dist:nsis
       - name: Upload installer
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: dist-installer
           path: dist/*Setup.exe
