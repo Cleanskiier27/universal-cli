@@ -47,7 +47,7 @@ jobs:
           echo "${{ env.REGISTRY_PASSWORD }}" | docker login -u "${{ env.REGISTRY_USERNAME }}" --password-stdin "${{ env.REGISTRY_LOGIN_SERVER }}"
 
       - name: Build and push Main Server image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: .
           file: ./Dockerfile
@@ -59,7 +59,7 @@ jobs:
           cache-to: type=gha,mode=max
 
       - name: Build and push Overlay UI image
-        uses: docker/build-push-action@v5
+        uses: docker/build-push-action@v7
         with:
           context: ./challengerepo/real-time-overlay
           file: ./challengerepo/real-time-overlay/Dockerfile
