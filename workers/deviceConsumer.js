@@ -1,14 +1,8 @@
 import { dequeue } from '../lib/messageQueue.js';
-import fetch from 'node-fetch';
-
-const TOPIC = 'device-registrations.v1';
-const INGESTION_ENDPOINT = process.env.INGESTION_ENDPOINT || 'http://localhost:3001/api/ingestion/mock';
-
-import { dequeue } from '../lib/messageQueue.js';
 import { transitionStatus } from '../lib/deviceStore.js';
 import fetch from 'node-fetch';
 
-const TOPIC = 'device-registrations.v1';
+const TOPIC = process.env.DEVICE_REGISTRATION_TOPIC || 'device-registrations.v1';
 const INGESTION_ENDPOINT = process.env.INGESTION_ENDPOINT || 'http://localhost:3001/api/ingestion/mock';
 const MAX_RETRIES = 3;
 

@@ -5,6 +5,7 @@ import { enqueue } from '../lib/messageQueue.js';
 import cryptoHash from 'crypto';
 
 const router = express.Router();
+const DEVICE_REGISTRATION_TOPIC = process.env.DEVICE_REGISTRATION_TOPIC || 'device-registrations.v1';
 
 // Simple validation middleware
 function validateRegistration(req, res, next) {
@@ -16,7 +17,7 @@ function validateRegistration(req, res, next) {
 }
 
 // POST /api/devices/register
-router.post('/register', validateRegistration, (req, res) => {
+router.post('/register', validateRegistration, async (req, res) => {
   const body = req.body;
 
   // canonical deviceId (if not provided generate one)
@@ -50,7 +51,7 @@ router.post('/register', validateRegistration, (req, res) => {
   // enqueue message for ingestion
   let msgId = 'galactic-noop';
   if (!isGalactic) {
-    const msg = enqueue('device-registrations.v1', {
+    const msg = await enqueue(DEVICE_REGISTRATION_TOPIC, {
       deviceId: saved.deviceId,
       hardwareIdHash: saved.hardwareIdHash,
       model: saved.model,

@@ -1,6 +1,7 @@
 import { spawn } from 'child_process';
 
 const BASE = process.env.BASE || 'http://localhost:3001';
+const DEVICE_REGISTRATION_TOPIC = `device-registrations.e2e.${Date.now()}`;
 
 function wait(ms){return new Promise(r=>setTimeout(r,ms))}
 
@@ -18,7 +19,11 @@ async function waitForServer(timeout = 15000){
 
 async function run(){
   console.log('Starting server...');
-  const server = spawn('node', ['server.js'], { cwd: process.cwd(), env: {...process.env, PORT: '3001'}, stdio: ['ignore','pipe','pipe'] });
+  const server = spawn('node', ['server.js'], {
+    cwd: process.cwd(),
+    env: { ...process.env, PORT: '3001', DEVICE_REGISTRATION_TOPIC },
+    stdio: ['ignore', 'pipe', 'pipe']
+  });
   server.stdout.on('data', d => process.stdout.write(`[server] ${d}`));
   server.stderr.on('data', d => process.stderr.write(`[server.err] ${d}`));
 
@@ -27,7 +32,11 @@ async function run(){
     console.log('Server is healthy');
 
     console.log('Starting consumer...');
-    const consumer = spawn('node', ['workers/deviceConsumer.js'], { cwd: process.cwd(), env: {...process.env, INGESTION_ENDPOINT: `${BASE}/api/ingestion/mock`}, stdio: ['ignore','pipe','pipe'] });
+    const consumer = spawn('node', ['workers/deviceConsumer.js'], {
+      cwd: process.cwd(),
+      env: { ...process.env, INGESTION_ENDPOINT: `${BASE}/api/ingestion/mock`, DEVICE_REGISTRATION_TOPIC },
+      stdio: ['ignore', 'pipe', 'pipe']
+    });
     consumer.stdout.on('data', d => process.stdout.write(`[consumer] ${d}`));
     consumer.stderr.on('data', d => process.stderr.write(`[consumer.err] ${d}`));
 
