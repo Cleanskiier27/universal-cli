@@ -27,6 +27,7 @@ export default defineConfig({
           { text: 'Recycling AI', link: '/RECYCLING-AI' },
           { text: 'Sterilization', link: '/STERILIZATION' },
           { text: 'Sterilization Checklist', link: '/STERILIZATION_CHECKLIST' },
+          { text: 'NASA Technichal Transfer Bounty', link: '/MOONBASE-ALPHA' },
         ]
       }
     ],
