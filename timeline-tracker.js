@@ -9,6 +9,8 @@ import express from 'express';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
+import os from 'os';
+import { execSync } from 'child_process';
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
@@ -56,7 +58,6 @@ class StateSnapshot {
   }
 
   captureSystemState() {
-    const os = require('os');
     return {
       platform: os.platform(),
       arch: os.arch(),
@@ -81,7 +82,6 @@ class StateSnapshot {
 
   captureGitState() {
     try {
-      const { execSync } = require('child_process');
       return {
         branch: execSync('git branch --show-current', { encoding: 'utf-8' }).trim(),
         commit: execSync('git rev-parse HEAD', { encoding: 'utf-8' }).trim(),
