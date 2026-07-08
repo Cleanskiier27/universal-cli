@@ -220,6 +220,33 @@
         }
 
         .hidden { display: none !important; }
+
+        /* Sub-module specs styles */
+        .spec-tab-btn {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--glass-border);
+            color: #fff;
+            padding: 8px 12px;
+            text-align: left;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+            width: 100%;
+        }
+        .spec-tab-btn:hover {
+            background: rgba(0, 242, 255, 0.1);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            transform: translateX(3px);
+        }
+        .spec-tab-btn.active {
+            background: rgba(0, 242, 255, 0.15);
+            border-color: var(--accent-blue);
+            color: var(--accent-blue);
+            box-shadow: 0 0 10px rgba(0, 242, 255, 0.2);
+        }
     </style>
 </head>
 <body>
@@ -240,6 +267,11 @@
         </svg>
 
         <!-- Desktop Nodes -->
+        <div class="desktop-icon" style="left:5%; top:20%;" onclick="toggleWindow('sub-module-specs-win')">
+            <div style="font-size: 2rem;">📟</div>
+            <div class="label">Sub-Module Specs</div>
+        </div>
+
         <div class="desktop-icon" style="left:50%; top:20%;" onclick="toggleWindow('exec-win')">
             <div style="font-size: 2rem;">🧠</div>
             <div class="label">Executives</div>
@@ -640,6 +672,7 @@
             <div class="taskbar-icon" onclick="toggleWindow('thunder-win')">⚡</div>
             <div class="taskbar-icon" onclick="toggleWindow('training-win')">📼</div>
             <div class="taskbar-icon" onclick="toggleWindow('reader-win')">♾️</div>
+            <div class="taskbar-icon" onclick="toggleWindow('sub-module-specs-win')">📟</div>
         </div>
     </div>
 
@@ -1043,8 +1076,208 @@
             } catch (e) {}
         }, 2000);
 
+        // Sub-module specs logic
+        const moduleKeyMap = {
+            'IPM': 'inputProcessing',
+            'MSU': 'materialSeparation',
+            'PC-THERMAL': 'thermalChamber',
+            'PC-MECHANICAL': 'mechanicalChamber',
+            'PC-CHEMICAL': 'chemicalChamber',
+            'PC-BIOLOGICAL': 'biologicalChamber',
+            'OMS': 'outputManagement',
+            'CCS': 'controlComputing',
+            'PMS': 'powerManagement',
+            'TMS': 'thermalManagement',
+            'CS': 'communication'
+        };
+
+        let specsDataCached = null;
+
+        async function fetchSpecsIfNeeded() {
+            if (specsDataCached) return specsDataCached;
+            try {
+                const res = await fetch('http://localhost:3001/api/specs').catch(() => fetch('/api/specs'));
+                specsDataCached = await res.json();
+                return specsDataCached;
+            } catch (e) {
+                console.error("Failed to fetch specs:", e);
+                return null;
+            }
+        }
+
+        async function showSubModuleSpecs(moduleId) {
+            document.querySelectorAll('#sub-module-specs-win .spec-tab-btn').forEach(btn => {
+                if (btn.getAttribute('onclick').includes(`'${moduleId}'`)) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            });
+
+            const detailsPane = document.getElementById('sub-module-details-pane');
+            detailsPane.innerHTML = `<div style="text-align:center; margin-top:50px; color:var(--accent-blue);">> CONNECTING TO API & FETCHING SPECS...</div>`;
+
+            const data = await fetchSpecsIfNeeded();
+            if (!data || !data.modules) {
+                detailsPane.innerHTML = `<div style="color:var(--danger); text-align:center; margin-top:50px;">❌ ERROR: COULD NOT LOAD SYSTEM SPECIFICATIONS. ENSURE API SERVER IS RUNNING.</div>`;
+                return;
+            }
+
+            const key = moduleKeyMap[moduleId];
+            const mod = data.modules[key];
+            if (!mod) {
+                detailsPane.innerHTML = `<div style="color:var(--danger); text-align:center; margin-top:50px;">❌ ERROR: SPECIFICATION SECTION '${moduleId}' NOT FOUND.</div>`;
+                return;
+            }
+
+            let html = `
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px; border-bottom:1px solid var(--glass-border); padding-bottom:10px;">
+                    <span style="font-size:1.1rem; font-weight:700; color:var(--accent-emerald);">${mod.name || key}</span>
+                    <span style="background:rgba(0,255,136,0.15); color:var(--accent-emerald); font-size:0.7rem; padding:3px 8px; border-radius:3px; border:1px solid var(--accent-emerald);">${mod.id || moduleId}</span>
+                </div>
+                <div style="display:grid; grid-template-columns:1fr; gap:12px;">
+            `;
+
+            for (const [prop, val] of Object.entries(mod)) {
+                if (prop === 'id' || prop === 'name') continue;
+                
+                let renderedVal = val;
+                if (Array.isArray(val)) {
+                    renderedVal = `<ul style="margin-left: 20px; list-style-type: square; color: var(--accent-blue); padding-top: 5px;">` + val.map(item => `<li style="margin-bottom:3px;">${item}</li>`).join('') + `</ul>`;
+                } else if (typeof val === 'object') {
+                    renderedVal = `<div style="padding-left:10px; border-left:2px solid var(--accent-purple); margin-top:5px; display:flex; flex-direction:column; gap:4px;">` + 
+                        Object.entries(val).map(([k, v]) => `<div><span style="color:var(--text-dim);">${k}:</span> <span style="color:var(--accent-blue);">${v}</span></div>`).join('') + `</div>`;
+                } else {
+                    renderedVal = `<span style="color:var(--accent-blue);">${val}</span>`;
+                }
+
+                html += `
+                    <div style="background:rgba(255,255,255,0.02); border:1px solid rgba(255,255,255,0.05); padding:10px; border-radius:5px;">
+                        <div style="font-size:0.65rem; color:var(--text-dim); text-transform:uppercase; margin-bottom:4px; font-weight:bold; letter-spacing:1px;">${prop.replace(/([A-Z])/g, ' $1')}</div>
+                        <div>${renderedVal}</div>
+                    </div>
+                `;
+            }
+
+            html += `
+                </div>
+                <div style="margin-top:20px; text-align:right;">
+                    <button class="spec-tab-btn" style="width:auto; display:inline-block; border-color:var(--accent-purple); color:var(--accent-purple);" onmouseover="this.style.background='rgba(112,0,255,0.15)'" onmouseout="this.style.background=''" onclick="spawnSubModuleWindow('${moduleId}')">📟 SPAWN FLOATING WINDOW</button>
+                </div>
+            `;
+
+            detailsPane.innerHTML = html;
+        }
+
+        let activeFloatingWindowsCount = 0;
+
+        async function spawnSubModuleWindow(moduleId) {
+            const data = await fetchSpecsIfNeeded();
+            if (!data || !data.modules) return;
+
+            const key = moduleKeyMap[moduleId];
+            const mod = data.modules[key];
+            if (!mod) return;
+
+            activeFloatingWindowsCount++;
+            const winId = `float-win-${moduleId}-${activeFloatingWindowsCount}`;
+            const top = 150 + (activeFloatingWindowsCount * 25) % 150;
+            const left = 300 + (activeFloatingWindowsCount * 25) % 250;
+
+            const win = document.createElement('div');
+            win.id = winId;
+            win.className = 'window';
+            win.style.cssText = `top: ${top}px; left: ${left}px; width: 380px; height: 320px; z-index: ${200 + activeFloatingWindowsCount};`;
+
+            let specsListHtml = '';
+            for (const [prop, val] of Object.entries(mod)) {
+                if (prop === 'id' || prop === 'name') continue;
+                
+                let renderedVal = val;
+                if (Array.isArray(val)) {
+                    renderedVal = val.join(', ');
+                } else if (typeof val === 'object') {
+                    renderedVal = Object.entries(val).map(([k, v]) => `${k}: ${v}`).join(' | ');
+                }
+                specsListHtml += `
+                    <div style="margin-bottom:10px; border-bottom:1px solid rgba(255,255,255,0.03); padding-bottom:5px;">
+                        <div style="font-size:0.6rem; color:var(--text-dim); text-transform:uppercase; font-weight:bold;">${prop.replace(/([A-Z])/g, ' $1')}</div>
+                        <div style="color:var(--accent-blue); font-size:0.8rem; margin-top:2px;">${renderedVal}</div>
+                    </div>
+                `;
+            }
+
+            win.innerHTML = `
+                <div class="window-header" style="background: rgba(112, 0, 255, 0.15); border-bottom: 1px solid var(--accent-purple);">
+                    <div class="window-title" style="color:var(--accent-purple); font-size:0.7rem;">📟 SPEC://${mod.id || moduleId}</div>
+                    <div class="window-controls">
+                        <div class="control-btn close-btn" onclick="document.getElementById('${winId}').remove()"></div>
+                    </div>
+                </div>
+                <div class="window-content" style="background:#000; font-family:'JetBrains Mono', monospace; padding:15px;">
+                    <div style="font-size:1rem; font-weight:bold; color:var(--accent-emerald); margin-bottom:15px; border-bottom:1px solid var(--glass-border); padding-bottom:5px;">
+                        ${mod.name}
+                    </div>
+                    <div style="overflow-y:auto; height:calc(100% - 40px);">
+                        ${specsListHtml}
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('desktop').appendChild(win);
+
+            const header = win.querySelector('.window-header');
+            header.onmousedown = function(e) {
+                let sx = e.clientX - win.offsetLeft;
+                let sy = e.clientY - win.offsetTop;
+                function move(e) {
+                    win.style.left = e.clientX - sx + 'px';
+                    win.style.top = e.clientY - sy + 'px';
+                }
+                document.addEventListener('mousemove', move);
+                document.onmouseup = () => {
+                    document.removeEventListener('mousemove', move);
+                    document.onmouseup = null;
+                }
+            }
+        }
+
     </script>
     
+    <!-- Sub-Module Specs Window -->
+    <div id="sub-module-specs-win" class="window hidden" style="top:120px; left:200px; width: 680px; height: 480px; z-index: 150;">
+        <div class="window-header" style="background: rgba(0, 242, 255, 0.15); border-bottom: 2px solid var(--accent-blue);">
+            <div class="window-title">📟 SUB_MODULE_SPECIFICATIONS_EXPLORER</div>
+            <div class="window-controls"><div class="control-btn close-btn" onclick="toggleWindow('sub-module-specs-win')"></div></div>
+        </div>
+        <div class="window-content" style="background: #02020a; display: flex; padding: 0; overflow: hidden; height: calc(100% - 35px);">
+            <!-- Sidebar with sub-module tabs/buttons -->
+            <div style="width: 220px; border-right: 1px solid var(--glass-border); padding: 10px; display: flex; flex-direction: column; gap: 6px; overflow-y: auto;">
+                <div style="font-size: 0.65rem; font-weight: bold; color: var(--text-dim); margin-bottom: 5px; letter-spacing: 1px;">CORE MODULES</div>
+                <button class="spec-tab-btn" onclick="showSubModuleSpecs('IPM')">📥 Input (IPM)</button>
+                <button class="spec-tab-btn" onclick="showSubModuleSpecs('MSU')">🔍 Separation (MSU)</button>
+                <button class="spec-tab-btn" onclick="showSubModuleSpecs('PC-THERMAL')">🔥 Thermal (PC)</button>
+                <button class="spec-tab-btn" onclick="showSubModuleSpecs('PC-MECHANICAL')">⚙️ Mechanical (PC)</button>
+                <button class="spec-tab-btn" onclick="showSubModuleSpecs('PC-CHEMICAL')">🧪 Chemical (PC)</button>
+                <button class="spec-tab-btn" onclick="showSubModuleSpecs('PC-BIOLOGICAL')">🌱 Biological (PC)</button>
+                <button class="spec-tab-btn" onclick="showSubModuleSpecs('OMS')">📦 Output (OMS)</button>
+                
+                <div style="font-size: 0.65rem; font-weight: bold; color: var(--text-dim); margin: 10px 0 5px 0; letter-spacing: 1px;">SYSTEM UTILITIES</div>
+                <button class="spec-tab-btn" onclick="showSubModuleSpecs('CCS')">💻 Computing (CCS)</button>
+                <button class="spec-tab-btn" onclick="showSubModuleSpecs('PMS')">⚡ Power (PMS)</button>
+                <button class="spec-tab-btn" onclick="showSubModuleSpecs('TMS')">❄️ Thermal (TMS)</button>
+                <button class="spec-tab-btn" onclick="showSubModuleSpecs('CS')">🛰️ Comms (CS)</button>
+            </div>
+            <!-- Main details pane -->
+            <div id="sub-module-details-pane" style="flex: 1; padding: 15px; overflow-y: auto; font-family: 'JetBrains Mono', monospace; font-size: 0.8rem; color: #fff;">
+                <div style="text-align: center; margin-top: 100px; color: var(--text-dim);">
+                    <div style="font-size: 3rem; margin-bottom: 15px;">📟</div>
+                    <div>SELECT A SUB-MODULE FROM THE SIDEBAR TO LOAD DETAILED TECHNICAL SPECIFICATIONS</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Kernel Telemetry Window (Appended) -->
     <div id="kernel-win" class="window hidden" style="top:250px; left:50px; width: 350px; height: 300px;">
         <div class="window-header">
