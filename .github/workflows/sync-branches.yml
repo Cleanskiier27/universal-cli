@@ -24,7 +24,12 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           git fetch origin
-          git checkout bigtree
+          if git ls-remote --exit-code --heads origin bigtree >/dev/null 2>&1; then
+            git checkout -B bigtree origin/bigtree
+          else
+            git checkout -B bigtree origin/main
+            git push origin bigtree || true
+          fi
           git merge origin/main --allow-unrelated-histories -m "Auto-sync: main → bigtree" || true
           git push origin bigtree || true
       
@@ -32,6 +37,6 @@ jobs:
         if: github.ref == 'refs/heads/bigtree'
         run: |
           git fetch origin
-          git checkout main
+          git checkout -B main origin/main
           git merge origin/bigtree --allow-unrelated-histories -m "Auto-sync: bigtree → main" || true
           git push origin main || true
