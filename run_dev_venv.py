@@ -77,7 +77,7 @@ def telemetry_logger_loop():
                 fp = psutil.Process(flask_pid)
                 flask_cpu = fp.cpu_percent(interval=0.1)
                 flask_mem = fp.memory_info().rss / (1024 * 1024)
-            except:
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
                 flask_cpu, flask_mem = 0.0, 0.0
 
             log_entry = {
@@ -304,7 +304,7 @@ def stats():
         fp = psutil.Process(flask_pid)
         flask_cpu = fp.cpu_percent(interval=0.1)
         flask_mem = fp.memory_info().rss / (1024 * 1024)
-    except:
+    except (psutil.NoSuchProcess, psutil.AccessDenied):
         flask_cpu, flask_mem = 0.0, 0.0
 
     return jsonify({
@@ -331,7 +331,7 @@ def history():
                 if line.strip():
                     try:
                         entries.append(json.loads(line.strip()))
-                    except:
+                    except Exception:
                         continue
     return jsonify(entries)
 
@@ -345,7 +345,7 @@ def reverse_history():
                 if line.strip():
                     try:
                         entries.append(json.loads(line.strip()))
-                    except:
+                    except Exception:
                         continue
     # Reverse list to implement "reverse in time" chronological traversal
     entries.reverse()
