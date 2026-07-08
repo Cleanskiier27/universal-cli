@@ -1096,11 +1096,14 @@
         async function fetchSpecsIfNeeded() {
             if (specsDataCached) return specsDataCached;
             try {
-                const res = await fetch('http://localhost:3001/api/specs').catch(() => fetch('/api/specs'));
+                const res = await fetch('http://localhost:3001/api/specs').catch((err) => {
+                    console.warn("Primary specs API fetch failed, trying local fallback:", err);
+                    return fetch('/api/specs');
+                });
                 specsDataCached = await res.json();
                 return specsDataCached;
             } catch (e) {
-                console.error("Failed to fetch specs:", e);
+                console.error("Failed to fetch specs from both primary and fallback endpoints:", e);
                 return null;
             }
         }
@@ -1170,6 +1173,11 @@
         }
 
         let activeFloatingWindowsCount = 0;
+        const BASE_TOP_OFFSET = 150;
+        const BASE_LEFT_OFFSET = 300;
+        const WINDOW_CASCADE_STEP = 25;
+        const CASCADE_MAX_TOP = 150;
+        const CASCADE_MAX_LEFT = 250;
 
         async function spawnSubModuleWindow(moduleId) {
             const data = await fetchSpecsIfNeeded();
@@ -1181,8 +1189,8 @@
 
             activeFloatingWindowsCount++;
             const winId = `float-win-${moduleId}-${activeFloatingWindowsCount}`;
-            const top = 150 + (activeFloatingWindowsCount * 25) % 150;
-            const left = 300 + (activeFloatingWindowsCount * 25) % 250;
+            const top = BASE_TOP_OFFSET + (activeFloatingWindowsCount * WINDOW_CASCADE_STEP) % CASCADE_MAX_TOP;
+            const left = BASE_LEFT_OFFSET + (activeFloatingWindowsCount * WINDOW_CASCADE_STEP) % CASCADE_MAX_LEFT;
 
             const win = document.createElement('div');
             win.id = winId;
@@ -1234,6 +1242,7 @@
                     win.style.left = e.clientX - sx + 'px';
                     win.style.top = e.clientY - sy + 'px';
                 }
+                document.removeEventListener('mousemove', move);
                 document.addEventListener('mousemove', move);
                 document.onmouseup = () => {
                     document.removeEventListener('mousemove', move);
