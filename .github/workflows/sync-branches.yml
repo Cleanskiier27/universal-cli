@@ -24,14 +24,27 @@ jobs:
         if: github.ref == 'refs/heads/main'
         run: |
           git fetch origin
-          git checkout bigtree
-          git merge origin/main --allow-unrelated-histories -m "Auto-sync: main → bigtree" || true
-          git push origin bigtree || true
+          if git ls-remote --exit-code --heads origin bigtree >/dev/null 2>&1; then
+            if git show-ref --verify --quiet refs/heads/bigtree; then
+              git checkout bigtree
+            else
+              git checkout -b bigtree origin/bigtree
+            fi
+          else
+            git checkout -b bigtree origin/main
+            git push origin bigtree
+          fi
+          git merge origin/main --allow-unrelated-histories -m "Auto-sync: main → bigtree" || (code=$?; echo "Merge failed with exit code ${code}; continuing sync workflow.")
+          git push origin bigtree || (code=$?; echo "Push failed with exit code ${code}; continuing sync workflow.")
       
       - name: Sync bigtree → main
         if: github.ref == 'refs/heads/bigtree'
         run: |
           git fetch origin
-          git checkout main
-          git merge origin/bigtree --allow-unrelated-histories -m "Auto-sync: bigtree → main" || true
-          git push origin main || true
+          if git show-ref --verify --quiet refs/heads/main; then
+            git checkout main
+          else
+            git checkout -b main origin/main
+          fi
+          git merge origin/bigtree --allow-unrelated-histories -m "Auto-sync: bigtree → main" || (code=$?; echo "Merge failed with exit code ${code}; continuing sync workflow.")
+          git push origin main || (code=$?; echo "Push failed with exit code ${code}; continuing sync workflow.")
