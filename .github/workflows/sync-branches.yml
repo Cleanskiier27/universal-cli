@@ -25,18 +25,26 @@ jobs:
         run: |
           git fetch origin
           if git ls-remote --exit-code --heads origin bigtree >/dev/null 2>&1; then
-            git checkout bigtree || git checkout -b bigtree --track origin/bigtree
+            if git show-ref --verify --quiet refs/heads/bigtree; then
+              git checkout bigtree
+            else
+              git checkout -b bigtree origin/bigtree
+            fi
           else
             git checkout -b bigtree origin/main
             git push origin bigtree
           fi
-          git merge origin/main --allow-unrelated-histories -m "Auto-sync: main → bigtree" || true
-          git push origin bigtree || true
+          git merge origin/main --allow-unrelated-histories -m "Auto-sync: main → bigtree" || echo "Merge failed; continuing sync workflow."
+          git push origin bigtree || echo "Push failed; continuing sync workflow."
       
       - name: Sync bigtree → main
         if: github.ref == 'refs/heads/bigtree'
         run: |
           git fetch origin
-          git checkout main || git checkout -b main --track origin/main
-          git merge origin/bigtree --allow-unrelated-histories -m "Auto-sync: bigtree → main" || true
-          git push origin main || true
+          if git show-ref --verify --quiet refs/heads/main; then
+            git checkout main
+          else
+            git checkout -b main origin/main
+          fi
+          git merge origin/bigtree --allow-unrelated-histories -m "Auto-sync: bigtree → main" || echo "Merge failed; continuing sync workflow."
+          git push origin main || echo "Push failed; continuing sync workflow."
