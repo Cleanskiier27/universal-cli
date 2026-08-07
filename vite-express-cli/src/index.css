@@ -1,0 +1,159 @@
+:root {
+  color: #e6edf7;
+  background: #0c1120;
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  font-synthesis: none;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 85% 8%, #274e9e 0, transparent 28rem),
+    radial-gradient(circle at 5% 100%, #175c56 0, transparent 27rem),
+    #0c1120;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+main {
+  width: min(760px, calc(100% - 2rem));
+  margin: 0 auto;
+  padding: 5rem 0;
+}
+
+.hero {
+  margin-bottom: 2.5rem;
+}
+
+.eyebrow {
+  margin: 0 0 0.75rem;
+  color: #87b6ff;
+  font-size: 0.8rem;
+  font-weight: 800;
+  letter-spacing: 0.14em;
+}
+
+h1,
+h2,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  max-width: 650px;
+  margin-bottom: 1rem;
+  font-size: clamp(2.4rem, 8vw, 4.8rem);
+  letter-spacing: -0.06em;
+  line-height: 0.95;
+}
+
+.summary {
+  max-width: 580px;
+  color: #aab8d0;
+  font-size: 1.1rem;
+  line-height: 1.6;
+}
+
+.card,
+.commands {
+  padding: 1.5rem;
+  border: 1px solid #2b3a59;
+  border-radius: 1rem;
+  background: rgb(13 22 41 / 78%);
+  box-shadow: 0 1.5rem 5rem rgb(0 0 0 / 20%);
+}
+
+.status {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  color: #aab8d0;
+}
+
+.status strong {
+  color: #5ee2b6;
+  text-transform: capitalize;
+}
+
+label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-weight: 700;
+}
+
+.command-row {
+  display: flex;
+  gap: 0.75rem;
+}
+
+input {
+  width: 100%;
+  min-width: 0;
+  padding: 0.8rem 0.9rem;
+  border: 1px solid #3a4e75;
+  border-radius: 0.55rem;
+  outline: none;
+  color: inherit;
+  background: #101a31;
+}
+
+input:focus {
+  border-color: #72a7ff;
+}
+
+button {
+  padding: 0.8rem 1.1rem;
+  border: 0;
+  border-radius: 0.55rem;
+  color: #0c1120;
+  font-weight: 800;
+  background: #8ebaff;
+  cursor: pointer;
+}
+
+output {
+  display: block;
+  margin-top: 1rem;
+  padding: 0.8rem;
+  border-radius: 0.55rem;
+  color: #99e9cc;
+  background: #122e30;
+}
+
+.commands {
+  display: grid;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+}
+
+.commands h2 {
+  margin-bottom: 0.25rem;
+}
+
+code {
+  width: fit-content;
+  padding: 0.35rem 0.55rem;
+  border-radius: 0.35rem;
+  color: #cfe0ff;
+  background: #17233c;
+}
+
+@media (max-width: 480px) {
+  main {
+    padding: 3rem 0;
+  }
+
+  .command-row {
+    flex-direction: column;
+  }
+}
