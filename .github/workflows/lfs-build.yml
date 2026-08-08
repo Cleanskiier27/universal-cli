@@ -56,7 +56,7 @@ jobs:
           docker run --rm -e SKIP_KERNEL="$SKIP_KERNEL" -e KERNEL_VERSION="$KERNEL_VERSION" -e KERNEL_CACHE_DIR="/workspace/kernel-cache" -v "$PWD/.cache/linux-${{ env.KERNEL_VERSION }}:/workspace/kernel-cache" -v "$PWD/os/lfs/output:/workspace/output" lfs-build || true
 
       - name: Upload rootfs artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: lfs-rootfs
           path: os/lfs/output/rootfs.tar.gz

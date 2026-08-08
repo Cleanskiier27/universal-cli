@@ -35,7 +35,7 @@ jobs:
         run: ls -la docs/diagrams/*.png || true
 
       - name: Upload PNG artifacts
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: diagrams-png
           path: docs/diagrams/*.png
