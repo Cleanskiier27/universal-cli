@@ -167,6 +167,22 @@ SERVICES = [
 # Scheduled launch configuration
 LAUNCH_DATE = datetime(2026, 1, 17, 9, 0, 0)  # January 17, 2026 at 9:00 AM
 CONFIG_FILE = 'networkbuster_config.json'
+WEB_HOST = os.environ.get('NETWORKBUSTER_HOST', '192.168.68.54')
+
+HOSTED_PAGES = (
+    (3000, '/os'),
+    (3000, '/gemini'),
+    (3000, '/security'),
+    (3000, '/music'),
+    (3000, '/cinematic'),
+    (3000, '/marketplace'),
+    (3000, '/tracking'),
+    (3000, '/worldview'),
+    (3000, '/overlay'),
+    (3000, '/dashboard'),
+    (3002, '/audio-lab'),
+    (7000, '/'),
+)
 
 class NetworkBusterManager:
     def __init__(self):
@@ -231,6 +247,14 @@ class NetworkBusterManager:
         """Save configuration to file"""
         with open(CONFIG_FILE, 'w') as f:
             json.dump(self.config, f, indent=2)
+
+    def open_hosted_pages(self):
+        """Open every browser-facing NetworkBuster service on the configured LAN host."""
+        print("\n🌐 Opening hosted NetworkBuster pages...")
+        for port, route in HOSTED_PAGES:
+            url = f'http://{WEB_HOST}:{port}{route}'
+            print(f'   Opening {url}')
+            webbrowser.open_new_tab(url)
     
     def check_port(self, port):
         """Check if port is in use"""
@@ -352,12 +376,10 @@ class NetworkBusterManager:
         print(f"🕐 Launch time: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
         print(f"📈 Total launches: {self.config['launch_count']}")
         
-        # Open main dashboards
+        # Open browser-facing services after their startup delays have elapsed.
         if started > 0:
-            print("\n🌐 Opening Dashboards...")
             time.sleep(3)
-            webbrowser.open('http://localhost:7000')
-            webbrowser.open('http://localhost:3000/control-panel')
+            self.open_hosted_pages()
         
         return started, failed
     

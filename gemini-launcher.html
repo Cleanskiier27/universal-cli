@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NetworkBuster Gemini Launcher</title>
+  <style>
+    :root { color: #eff6ff; background: #070d1b; font-family: system-ui, sans-serif; }
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: radial-gradient(circle at 80% 0%, #182f69, transparent 38rem), #070d1b; }
+    main { width: min(760px, calc(100% - 2rem)); padding: 2rem; }
+    .panel { padding: 1.5rem; border: 1px solid #334a7a; border-radius: 1rem; background: #0b1428dd; box-shadow: 0 1rem 4rem #0008; }
+    h1 { margin: 0; font-size: clamp(2rem, 7vw, 3.5rem); }
+    p { color: #b9c8e8; line-height: 1.5; }
+    label { display: block; margin: 1rem 0 .4rem; font-weight: 700; }
+    input, textarea, button { width: 100%; padding: .8rem; border-radius: .5rem; font: inherit; }
+    input, textarea { color: inherit; border: 1px solid #3d578c; background: #101d36; }
+    textarea { min-height: 10rem; resize: vertical; }
+    button { margin-top: 1rem; border: 0; color: #07101e; font-weight: 800; background: #86b4ff; cursor: pointer; }
+    button:disabled { opacity: .65; cursor: wait; }
+    output { display: block; min-height: 3rem; margin-top: 1rem; padding: 1rem; border-radius: .5rem; white-space: pre-wrap; background: #101d36; }
+    .hint { font-size: .9rem; }
+  </style>
+</head>
+<body>
+  <main>
+    <section class="panel">
+      <h1>NB Gemini Launcher</h1>
+      <p>Use Gemini from this LAN-hosted page. The API key remains on the server.</p>
+      <label for="token">Launcher token</label>
+      <input id="token" type="password" autocomplete="current-password" placeholder="GEMINI_LAUNCHER_TOKEN">
+      <label for="message">Message</label>
+      <textarea id="message" maxlength="4000" placeholder="Ask Gemini anything..."></textarea>
+      <button id="send" type="button">Send to Gemini</button>
+      <output id="result" aria-live="polite">Ready.</output>
+      <p class="hint">The server requires both <code>GEMINI_API_KEY</code> and <code>GEMINI_LAUNCHER_TOKEN</code>.</p>
+    </section>
+  </main>
+  <script>
+    const token = document.querySelector("#token");
+    const message = document.querySelector("#message");
+    const send = document.querySelector("#send");
+    const result = document.querySelector("#result");
+
+    send.addEventListener("click", async () => {
+      const text = message.value.trim();
+      if (!token.value || !text) {
+        result.textContent = "Enter both a launcher token and a message.";
+        return;
+      }
+
+      send.disabled = true;
+      result.textContent = "Contacting Gemini...";
+      try {
+        const response = await fetch("/api/gemini/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token.value}`
+          },
+          body: JSON.stringify({ message: text })
+        });
+        const payload = await response.json();
+        if (!response.ok) throw new Error(payload.error || "Request failed.");
+        result.textContent = payload.content;
+      } catch (error) {
+        result.textContent = error.message;
+      } finally {
+        send.disabled = false;
+      }
+    });
+  </script>
+</body>
+</html>
