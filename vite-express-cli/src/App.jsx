@@ -5,6 +5,15 @@ export default function App() {
   const [message, setMessage] = useState("");
   const [result, setResult] = useState("");
   const [lastMessage, setLastMessage] = useState("");
+  const [chatPrompt, setChatPrompt] = useState("");
+  const [chatMessages, setChatMessages] = useState([
+    {
+      role: "assistant",
+      content: "Mission Copilot online. What would you like to build?"
+    }
+  ]);
+  const [chatError, setChatError] = useState("");
+  const [chatLoading, setChatLoading] = useState(false);
 
   useEffect(() => {
     fetch("/api/health")
@@ -52,6 +61,45 @@ export default function App() {
     link.download = `preciseliens-${kind}-${timestamp}.txt`;
     link.click();
     URL.revokeObjectURL(downloadUrl);
+  }
+
+  async function submitChat(event) {
+    event.preventDefault();
+    const prompt = chatPrompt.trim();
+
+    if (!prompt || chatLoading) {
+      return;
+    }
+
+    const nextMessages = [...chatMessages, { role: "user", content: prompt }];
+    setChatMessages(nextMessages);
+    setChatPrompt("");
+    setChatError("");
+    setChatLoading(true);
+
+    try {
+      const response = await fetch("/api/copilot/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          messages: nextMessages.map(({ role, content }) => ({ role, content }))
+        })
+      });
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error ?? "Mission Copilot could not respond.");
+      }
+
+      setChatMessages((currentMessages) => [
+        ...currentMessages,
+        { role: "assistant", content: data.content }
+      ]);
+    } catch (error) {
+      setChatError(error.message);
+    } finally {
+      setChatLoading(false);
+    }
   }
 
   return (
@@ -148,6 +196,45 @@ export default function App() {
             Export output
           </button>
         </div>
+      </section>
+
+      <section className="copilot-deck" aria-labelledby="copilot-title">
+        <div className="section-heading">
+          <p>MISSION COPILOT // 02</p>
+          <span>AZURE AI FOUNDRY RELAY</span>
+        </div>
+        <h2 id="copilot-title">Keep the mission moving</h2>
+        <div className="chat-log" aria-live="polite">
+          {chatMessages.map((chatMessage, index) => (
+            <article className={`chat-message ${chatMessage.role}`} key={`${chatMessage.role}-${index}`}>
+              <span>{chatMessage.role === "assistant" ? "COPILOT" : "YOU"}</span>
+              <p>{chatMessage.content}</p>
+            </article>
+          ))}
+          {chatLoading && (
+            <article className="chat-message assistant">
+              <span>COPILOT</span>
+              <p className="thinking">Synthesizing response...</p>
+            </article>
+          )}
+        </div>
+        <form className="chat-form" onSubmit={submitChat}>
+          <label htmlFor="chat-prompt">Ask Mission Copilot</label>
+          <div className="command-row">
+            <input
+              id="chat-prompt"
+              value={chatPrompt}
+              onChange={(event) => setChatPrompt(event.target.value)}
+              placeholder="Plan a feature, explain a command, or troubleshoot..."
+              maxLength="4000"
+              required
+            />
+            <button type="submit" disabled={chatLoading}>
+              {chatLoading ? "Thinking" : "Ask Copilot"}
+            </button>
+          </div>
+        </form>
+        {chatError && <p className="chat-error" role="alert">{chatError}</p>}
       </section>
 
       <section className="operations-grid" id="operations" aria-label="CLI operations">

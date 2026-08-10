@@ -12,6 +12,13 @@ npm run dev
 
 The Vite client runs at `http://localhost:5173` and proxies API requests to Express at `http://localhost:3001`.
 
+## Mission Copilot chat
+
+The client includes a multi-turn Mission Copilot panel backed by Azure AI Foundry. Copy
+`.env.example` to `.env`, then configure an OpenAI-compatible Foundry endpoint, API key,
+and deployment name. The Express server reads these variables and keeps the API key out of
+the browser.
+
 ## CLI
 
 Run the CLI from this directory:
