@@ -37,6 +37,21 @@ app.disable('x-powered-by');
 if (compression) app.use(compression());
 if (helmet) app.use(helmet());
 
+// os.html loads the Socket.IO CDN script, one known inline script, and YouTube embeds.
+if (helmet) {
+  app.use(helmet.contentSecurityPolicy({
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'", 'https://cdn.socket.io', "'sha256-UizmQVBeOxJkDpqjJdDUIOBM5bhBuv3hNMoB0oT8Rnc='"],
+      connectSrc: ["'self'", 'https://cdn.socket.io', 'ws:', 'wss:'],
+      frameSrc: ["'self'", 'https://www.youtube.com'],
+      imgSrc: ["'self'", 'data:', 'https:'],
+      styleSrc: ["'self'", "'unsafe-inline'", 'https://fonts.googleapis.com'],
+      fontSrc: ["'self'", 'https://fonts.gstatic.com', 'data:']
+    }
+  }));
+}
+
 // Proxy error handling
 proxy.on('error', (err, req, res) => {
   res.status(502).json({ error: 'Proxy target unreachable', details: err.message });
@@ -80,6 +95,7 @@ Object.entries(MISSION_PROXIES).forEach(([prefix, target]) => {
 
 // Direct HTML Routes
 const HTML_ROUTES = {
+  '/o': 'os.html',
   '/os': 'os.html',
   '/neural-coder-os': 'os.html',
   '/gemini': 'gemini-launcher.html',

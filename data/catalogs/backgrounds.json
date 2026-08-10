@@ -1,0 +1,61 @@
+{
+  "catalog": "os_backgrounds",
+  "currency": "NEURAL_CREDITS",
+  "items": [
+    {
+      "id": "bg-deep-space",
+      "name": "Deep Space Grid",
+      "price": 0,
+      "css": {
+        "primary": "#05050a",
+        "gridColor": "rgba(0,210,255,0.05)",
+        "accent": "#00f2ff"
+      },
+      "description": "The default Neural Coder OS grid backdrop."
+    },
+    {
+      "id": "bg-nebula-purple",
+      "name": "Nebula Purple",
+      "price": 4200,
+      "css": {
+        "primary": "#0a0512",
+        "gridColor": "rgba(155,89,255,0.08)",
+        "accent": "#9b59ff"
+      },
+      "description": "A violet nebula haze themed wallpaper for the OS desktop."
+    },
+    {
+      "id": "bg-solar-flare",
+      "name": "Solar Flare",
+      "price": 5600,
+      "css": {
+        "primary": "#120503",
+        "gridColor": "rgba(255,140,0,0.08)",
+        "accent": "#ff8c00"
+      },
+      "description": "Warm amber grid lines evoking a close solar orbit."
+    },
+    {
+      "id": "bg-emerald-drift",
+      "name": "Emerald Drift",
+      "price": 3900,
+      "css": {
+        "primary": "#020a06",
+        "gridColor": "rgba(0,255,136,0.08)",
+        "accent": "#00ff88"
+      },
+      "description": "Cool green grid theme matching the recycle/luna module accent color."
+    },
+    {
+      "id": "bg-titan-blue",
+      "name": "Titan Blue",
+      "price": 4800,
+      "css": {
+        "primary": "#03060f",
+        "gridColor": "rgba(0,120,255,0.08)",
+        "accent": "#0078ff"
+      },
+      "description": "Deep blue theme inspired by the Star Browser mission control palette."
+    }
+  ]
+}

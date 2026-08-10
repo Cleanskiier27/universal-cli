@@ -1,0 +1,114 @@
+{
+  "catalog": "astrological_galaxies",
+  "currency": "NEURAL_CREDITS",
+  "items": [
+    {
+      "id": "gal-aries",
+      "name": "Aries Cluster",
+      "sign": "Aries",
+      "element": "Fire",
+      "distance_ly": 4200,
+      "price": 12000,
+      "description": "A high-energy spiral galaxy said to grant bold navigation instincts to any fleet that charts through it."
+    },
+    {
+      "id": "gal-taurus",
+      "name": "Taurus Expanse",
+      "sign": "Taurus",
+      "element": "Earth",
+      "distance_ly": 6100,
+      "price": 15500,
+      "description": "Dense with mineral-rich nebulae; prized by mining consortiums for its stable orbital belts."
+    },
+    {
+      "id": "gal-gemini",
+      "name": "Gemini Twin Arms",
+      "sign": "Gemini",
+      "element": "Air",
+      "distance_ly": 3800,
+      "price": 13800,
+      "description": "A binary-armed spiral galaxy known for its mirrored star formations and unstable wormhole pairs."
+    },
+    {
+      "id": "gal-cancer",
+      "name": "Cancer Shell Nebula",
+      "sign": "Cancer",
+      "element": "Water",
+      "distance_ly": 5200,
+      "price": 14200,
+      "description": "Encased in a protective ring of ionized gas, this galaxy shelters some of the oldest known star nurseries."
+    },
+    {
+      "id": "gal-leo",
+      "name": "Leo Radiant",
+      "sign": "Leo",
+      "element": "Fire",
+      "distance_ly": 4700,
+      "price": 18900,
+      "description": "Home to a supermassive core that outputs a golden luminance visible across three sectors."
+    },
+    {
+      "id": "gal-virgo",
+      "name": "Virgo Lattice",
+      "sign": "Virgo",
+      "element": "Earth",
+      "distance_ly": 5400,
+      "price": 16200,
+      "description": "A meticulously ordered galaxy cluster, valued for its predictable gravitational lensing patterns."
+    },
+    {
+      "id": "gal-libra",
+      "name": "Libra Balance Field",
+      "sign": "Libra",
+      "element": "Air",
+      "distance_ly": 6300,
+      "price": 15900,
+      "description": "Two counter-rotating galaxies locked in perfect gravitational equilibrium."
+    },
+    {
+      "id": "gal-scorpio",
+      "name": "Scorpio Dark Reach",
+      "sign": "Scorpio",
+      "element": "Water",
+      "distance_ly": 7100,
+      "price": 21000,
+      "description": "Shrouded in dark matter, this galaxy hides one of the densest known black hole clusters."
+    },
+    {
+      "id": "gal-sagittarius",
+      "name": "Sagittarius Bowshock",
+      "sign": "Sagittarius",
+      "element": "Fire",
+      "distance_ly": 3400,
+      "price": 17500,
+      "description": "Named for its arrow-shaped shock front, formed by a galaxy-scale collision millions of years ago."
+    },
+    {
+      "id": "gal-capricorn",
+      "name": "Capricorn Ridge",
+      "sign": "Capricorn",
+      "element": "Earth",
+      "distance_ly": 8200,
+      "price": 19800,
+      "description": "A rugged formation of ancient star clusters climbing along a long galactic filament."
+    },
+    {
+      "id": "gal-aquarius",
+      "name": "Aquarius Current",
+      "sign": "Aquarius",
+      "element": "Air",
+      "distance_ly": 6900,
+      "price": 16700,
+      "description": "Streams of ionized gas flow through this galaxy like rivers, feeding newborn star systems."
+    },
+    {
+      "id": "gal-pisces",
+      "name": "Pisces Deep Drift",
+      "sign": "Pisces",
+      "element": "Water",
+      "distance_ly": 5800,
+      "price": 14900,
+      "description": "Two galaxies drifting in a slow gravitational dance, destined to merge in a few billion years."
+    }
+  ]
+}
