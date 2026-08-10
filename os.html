@@ -45,8 +45,8 @@
             background-image: 
                 radial-gradient(circle at var(--nebula-x, 50%) var(--nebula-y, 50%), rgba(0, 242, 255, 0.08), transparent 70%),
                 radial-gradient(circle at var(--nebula-x2, 80%) var(--nebula-y2, 20%), rgba(112, 0, 255, 0.08), transparent 70%),
-                linear-gradient(rgba(0, 242, 255, 0.05) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 242, 255, 0.05) 1px, transparent 1px);
+                linear-gradient(var(--grid-color, rgba(0, 242, 255, 0.05)) 1px, transparent 1px),
+                linear-gradient(90deg, var(--grid-color, rgba(0, 242, 255, 0.05)) 1px, transparent 1px);
             background-size: 100% 100%, 100% 100%, var(--grid-size, 40px) var(--grid-size, 40px), var(--grid-size, 40px) var(--grid-size, 40px);
             box-shadow: inset 0 0 100px #000;
         }
@@ -355,6 +355,16 @@
         <div class="desktop-icon" style="left:85%; top:60%;" onclick="toggleWindow('pydecks-win')">
             <div style="font-size: 2rem;">📽️</div>
             <div class="label">PyDecks</div>
+        </div>
+
+        <div class="desktop-icon" style="left:50%; top:35%;" onclick="toggleWindow('catalog-win')">
+            <div style="font-size: 2rem;">🛍️</div>
+            <div class="label">Catalog Market</div>
+        </div>
+
+        <div class="desktop-icon" style="left:50%; top:65%;" onclick="toggleWindow('backend-win')">
+            <div style="font-size: 2rem;">🖥️</div>
+            <div class="label">Backend</div>
         </div>
 
         <!-- Terminal Window -->

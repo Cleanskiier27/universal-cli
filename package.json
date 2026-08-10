@@ -22,8 +22,8 @@
     "networking"
   ],
   "scripts": {
-    "start": "node server.js",
-    "dev": "node --watch server.js",
+    "start": "node --env-file=.env server.js",
+    "dev": "node --env-file=.env --watch server.js",
     "proxy:3000": "PROXY_PORT=3000 node proxy-server.js",
     "proxy:8080": "PROXY_PORT=8080 node proxy-server.js",
     "proxy": "PROXY_PORT=3000 node proxy-server.js",

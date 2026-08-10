@@ -1,0 +1,78 @@
+{
+  "catalog": "rocket_fleet",
+  "currency": "NEURAL_CREDITS",
+  "items": [
+    {
+      "id": "rkt-scout-1",
+      "name": "Scout-1 Probe",
+      "class": "Reconnaissance",
+      "capacity_kg": 50,
+      "range_ly": 2,
+      "price": 8500,
+      "description": "Lightweight unmanned probe built for fast atmospheric and orbital surveys."
+    },
+    {
+      "id": "rkt-hauler-4",
+      "name": "Hauler-4 Freighter",
+      "class": "Cargo",
+      "capacity_kg": 42000,
+      "range_ly": 5,
+      "price": 65000,
+      "description": "Bulk cargo hauler used for lunar recycling runs and long-haul mineral transport."
+    },
+    {
+      "id": "rkt-falcon-relay",
+      "name": "Falcon Relay",
+      "class": "Communications",
+      "capacity_kg": 1200,
+      "range_ly": 12,
+      "price": 42000,
+      "description": "Deploys deep-space relay satellites to extend the interstellar DTN mesh network."
+    },
+    {
+      "id": "rkt-titan-x",
+      "name": "Titan-X Heavy Lifter",
+      "class": "Heavy Cargo",
+      "capacity_kg": 120000,
+      "range_ly": 8,
+      "price": 148000,
+      "description": "The largest lifter in the fleet, rated for full refinery module transport to orbital construction sites."
+    },
+    {
+      "id": "rkt-comet-runner",
+      "name": "Comet Runner",
+      "class": "Fast Transit",
+      "capacity_kg": 3000,
+      "range_ly": 20,
+      "price": 89000,
+      "description": "High delta-v courier ship optimized for rapid crew and priority cargo transit."
+    },
+    {
+      "id": "rkt-arch-lander",
+      "name": "Arch Lander",
+      "class": "Surface Lander",
+      "capacity_kg": 8000,
+      "range_ly": 1,
+      "price": 37500,
+      "description": "Precision landing vehicle for lunar and planetary surface operations, including miner deployment."
+    },
+    {
+      "id": "rkt-nova-scout",
+      "name": "Nova Scout",
+      "class": "Reconnaissance",
+      "capacity_kg": 90,
+      "range_ly": 6,
+      "price": 15200,
+      "description": "Extended-range scout drone equipped for galactic signal processing survey missions."
+    },
+    {
+      "id": "rkt-orbit-tug",
+      "name": "Orbit Tug",
+      "class": "Utility",
+      "capacity_kg": 6000,
+      "range_ly": 0.5,
+      "price": 22800,
+      "description": "Maneuvering tug for orbital insertion and station-keeping of larger vessels."
+    }
+  ]
+}
