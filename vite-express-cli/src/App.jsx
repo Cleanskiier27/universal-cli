@@ -112,6 +112,8 @@ export default function App() {
         <div className="nav-links">
           <a href="#command-deck">COMMAND</a>
           <a href="#operations">OPERATIONS</a>
+          <a href="/flash-commands.html">FLASH COMMANDS</a>
+          <a href="/overlay">OVERLAY</a>
           <span className="live-indicator">LIVE</span>
         </div>
       </nav>
@@ -126,6 +128,8 @@ export default function App() {
           </p>
           <div className="hero-actions">
             <a className="primary-link" href="#command-deck">Open command deck</a>
+            <a className="primary-link secondary" href="/flash-commands.html">Flash Commands</a>
+            <a className="primary-link tertiary" href="/overlay">Open Overlay</a>
             <span>LOCAL OPERATIONAL LAYER</span>
           </div>
         </div>
