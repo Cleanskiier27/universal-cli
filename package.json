@@ -29,6 +29,7 @@
     "proxy": "PROXY_PORT=3000 node proxy-server.js",
     "all": "concurrently \"npm start\" \"npm run proxy:3000\"",
     "build": "npm install",
+    "build:homepage": "npm --prefix vite-express-cli run build",
     "apply:network-boost": "powershell -ExecutionPolicy Bypass -File scripts/network-boost.ps1 -Apply -Confirm:$false",
     "show:network-boost": "powershell -ExecutionPolicy Bypass -File scripts/network-boost.ps1",
     "test": "echo No-tests-specified",
