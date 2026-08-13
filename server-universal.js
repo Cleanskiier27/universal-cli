@@ -237,6 +237,41 @@ app.post('/api/restart', requireAdmin, (req, res) => {
   });
 });
 
+// Search API Endpoint
+app.get('/api/search', async (req, res) => {
+  const query = typeof req.query.q === 'string' ? req.query.q.trim() : '';
+  const searchKey = process.env.SEARCH_API_KEY || process.env.BING_SEARCH_API_KEY || process.env.GOOGLE_SEARCH_API_KEY;
+
+  if (!query) {
+    return res.status(400).json({ error: 'Query parameter q is required.' });
+  }
+
+  if (!searchKey) {
+    return res.json({
+      query,
+      status: 'mock',
+      results: [
+        { title: `Result for ${query}`, url: `https://networkbuster.net/search?q=${encodeURIComponent(query)}`, snippet: `Sample indexing result for '${query}' on NetworkBuster Neural OS.` }
+      ],
+      note: 'SEARCH_API_KEY is not set in environment. Set SEARCH_API_KEY or BING_SEARCH_API_KEY in .env for live web search.'
+    });
+  }
+
+  try {
+    const searchUrl = `https://api.bing.microsoft.com/v7.0/search?q=${encodeURIComponent(query)}`;
+    const apiRes = await fetch(searchUrl, {
+      headers: { 'Ocp-Apim-Subscription-Key': searchKey }
+    });
+    if (!apiRes.ok) {
+      return res.status(apiRes.status).json({ error: 'External Search API error' });
+    }
+    const data = await apiRes.json();
+    res.json({ query, status: 'live', results: data.webPages?.value || [] });
+  } catch (err) {
+    res.status(502).json({ error: 'Search request failed', details: err.message });
+  }
+});
+
 // Get component status
 app.get('/api/components', (req, res) => {
   res.set('Cache-Control', 'public, max-age=10');
