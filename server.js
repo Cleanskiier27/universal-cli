@@ -127,6 +127,11 @@ app.get('/worldview', (req, res) => {
   res.sendFile(path.join(__dirname, 'challengerepo/real-time-overlay/dist/index.html'));
 });
 
+// Cloud-Code Console (Search-Console-style analytics: Performance, Income Tracker, Pages, Sitemaps, Links, Settings)
+app.get(['/cloud-code', '/console'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'cloud-code/dist/index.html'));
+});
+
 // ============================================
 // OPERATIONAL API ENDPOINTS
 // ============================================
@@ -357,6 +362,7 @@ app.get('/api/search', async (req, res) => {
 // Static file serving
 app.use('/overlay', express.static(path.join(__dirname, 'challengerepo/real-time-overlay/dist')));
 app.use('/dashboard', express.static(path.join(__dirname, 'dashboard/dist')));
+app.use('/cloud-code', express.static(path.join(__dirname, 'cloud-code/dist')));
 app.use(express.static(VITE_EXPRESS_DIST));
 app.use(express.static(path.join(__dirname, 'web-app')));
 app.use(express.static(__dirname)); // Serve root files as static if no route matches

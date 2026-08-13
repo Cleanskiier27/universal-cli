@@ -358,6 +358,7 @@ const staticPaths = [
   { prefix: '/blog', dir: 'blog' },
   { prefix: '/dashboard', dir: 'dashboard/dist' },
   { prefix: '/overlay', dir: 'challengerepo/real-time-overlay/dist' },
+  { prefix: '/cloud-code', dir: 'cloud-code/dist' },
   { prefix: '/', dir: 'web-app' }
 ];
 
@@ -390,6 +391,11 @@ app.get('/tracking', (req, res) => {
 
 app.get('/worldview', (req, res) => {
   res.sendFile(challengeOverlayPath);
+});
+
+// Cloud-Code Console (Search-Console-style analytics: Performance, Income Tracker, Pages, Sitemaps, Links, Settings)
+app.get(['/cloud-code', '/console'], (req, res) => {
+  res.sendFile(path.join(__dirname, 'cloud-code/dist/index.html'));
 });
 
 // AI Robot endpoint using Azure OpenAI (set AZURE_OPENAI_ENDPOINT, AZURE_OPENAI_KEY, AZURE_OPENAI_DEPLOYMENT)
