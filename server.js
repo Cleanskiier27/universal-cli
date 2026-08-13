@@ -285,6 +285,14 @@ app.get('/api/health', (req, res) => {
   res.json({ status: 'healthy', timestamp: new Date().toISOString(), suite: 'Preciseliens PLLC' });
 });
 
+app.post('/api/ingestion/mock', (req, res) => {
+  res.json({
+    status: 'acknowledged',
+    acknowledgedAt: new Date().toISOString(),
+    confidence: 0.99
+  });
+});
+
 // 404 handler
 app.use((req, res) => {
   res.status(404).json({ error: 'Not found', path: req.path, hint: 'Try the homepage or /os.' });

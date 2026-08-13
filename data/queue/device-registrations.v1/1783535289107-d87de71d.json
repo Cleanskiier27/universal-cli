@@ -1,0 +1,18 @@
+{
+  "id": "1783535289107-d87de71d",
+  "topic": "device-registrations.v1",
+  "timestamp": "2026-07-08T18:28:09.107Z",
+  "payload": {
+    "deviceId": "1783535289106-a8505eff",
+    "hardwareIdHash": "a0b3deb467f1a61b22cc4306621e807af29cbbdd76a231d7d7df9140328339d9",
+    "model": "E2E-Model",
+    "firmwareVersion": "e2e-0.1",
+    "location": "test-lab",
+    "ts": "2026-07-08T18:28:09.107Z",
+    "initialTelemetry": {
+      "battery": 100
+    },
+    "source": "api",
+    "traceId": "9f67f5cc-5dea-427f-adf9-8dca7d7024f5"
+  }
+}
