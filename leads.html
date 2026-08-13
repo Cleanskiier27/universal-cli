@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataCentral Cloud LLC // Enterprise AI Lead & Infrastructure Demo v37.0</title>
+    <meta name="description" content="DataCentral Cloud LLC v37.0 - Enterprise Proposal, Interactive Cost Estimator, Geemini Autonomous Agent Runtime & Sovereign AI Infrastructure.">
+    <meta name="keywords" content="DataCentral Cloud LLC, AGI.ms, Geemini v37, AI Infrastructure, Enterprise Lead Generation, Cost Estimator, NetworkBuster, Autonomous Agents">
+    <meta name="author" content="DataCentral Cloud LLC">
+    <meta name="robots" content="index, follow">
+    <link rel="canonical" href="https://networkbuster.net/leads">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700;800&family=JetBrains+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #00f3ff;
+            --secondary: #9d00ff;
+            --accent: #00ff88;
+            --bg-dark: #030712;
+            --card-bg: rgba(15, 23, 42, 0.85);
+            --border-color: rgba(255, 255, 255, 0.14);
+            --text-muted: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Outfit', sans-serif; }
+
+        body {
+            background-color: var(--bg-dark);
+            color: #f8fafc;
+            overflow-x: hidden;
+            background-image: 
+                radial-gradient(circle at 15% 20%, rgba(0, 243, 255, 0.1) 0%, transparent 50%),
+                radial-gradient(circle at 85% 80%, rgba(157, 0, 255, 0.1) 0%, transparent 50%);
+            min-height: 100vh;
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 6%;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            backdrop-filter: blur(16px);
+            background: rgba(3, 7, 18, 0.9);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .brand {
+            font-size: 1.25rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+        }
+
+        .badge-v3 {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.75rem;
+            background: linear-gradient(135deg, rgba(0, 243, 255, 0.2), rgba(157, 0, 255, 0.2));
+            color: var(--primary);
+            border: 1px solid var(--primary);
+            padding: 3px 10px;
+            border-radius: 12px;
+            letter-spacing: 1px;
+            font-weight: 700;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 28px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        .btn-nav {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000;
+            font-weight: 800;
+            padding: 8px 22px;
+            border-radius: 20px;
+            text-decoration: none;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-nav:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 0 20px rgba(0, 243, 255, 0.4);
+        }
+
+        .hero {
+            padding: 140px 6% 80px;
+            display: grid;
+            grid-template-columns: 1fr 1.05fr;
+            gap: 60px;
+            max-width: 1350px;
+            margin: 0 auto;
+            align-items: start;
+        }
+
+        .hero-text h1 {
+            font-size: clamp(2.6rem, 5vw, 4.2rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            background: linear-gradient(to right, #ffffff, #cbd5e1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text p {
+            font-size: 1.15rem;
+            color: var(--text-muted);
+            margin-bottom: 32px;
+            line-height: 1.65;
+        }
+
+        .metrics-row {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-top: 36px;
+            padding-top: 28px;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .metric-card {
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .metric-card .val {
+            font-size: 1.85rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .metric-card .lbl {
+            font-size: 0.78rem;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-top: 4px;
+        }
+
+        /* Lead Capture Card */
+        .lead-form-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 40px;
+            backdrop-filter: blur(24px);
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.7);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .lead-form-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary), var(--secondary), var(--accent));
+        }
+
+        .form-header {
+            margin-bottom: 24px;
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+        }
+
+        .form-header h2 {
+            font-size: 1.65rem;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .form-header p {
+            font-size: 0.9rem;
+            color: var(--text-muted);
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #e2e8f0;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(3, 7, 18, 0.85);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: #fff;
+            font-size: 0.95rem;
+            transition: border-color 0.3s, box-shadow 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 12px rgba(0, 243, 255, 0.25);
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+        }
+
+        /* Interactive Cost Calculator Panel */
+        .calculator-panel {
+            background: rgba(3, 7, 18, 0.6);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .calculator-panel h4 {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        .calculator-panel .est-price {
+            color: var(--accent);
+            font-size: 1.1rem;
+            font-weight: 800;
+            font-family: 'JetBrains Mono', monospace;
+        }
+
+        .slider-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .slider-row input[type="range"] {
+            flex: 1;
+            accent-color: var(--primary);
+            cursor: pointer;
+        }
+
+        .slider-val {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9rem;
+            color: #fff;
+            min-width: 80px;
+            text-align: right;
+        }
+
+        .btn-submit {
+            width: 100%;
+            padding: 16px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #030712;
+            font-weight: 800;
+            font-size: 1rem;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .btn-submit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(0, 243, 255, 0.35);
+        }
+
+        #form-response {
+            margin-top: 16px;
+            padding: 14px;
+            border-radius: 10px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            display: none;
+            line-height: 1.5;
+        }
+
+        #form-response.success {
+            display: block;
+            background: rgba(0, 255, 136, 0.12);
+            border: 1px solid var(--accent);
+            color: var(--accent);
+        }
+
+        #form-response.error {
+            display: block;
+            background: rgba(255, 0, 68, 0.12);
+            border: 1px solid #ff0044;
+            color: #ff0044;
+        }
+
+        /* Pillars Section */
+        .pillars-section {
+            padding: 80px 6%;
+            max-width: 1350px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .section-title h2 {
+            font-size: 2.3rem;
+            font-weight: 800;
+            margin-bottom: 12px;
+        }
+
+        .section-title p {
+            color: var(--text-muted);
+            font-size: 1.05rem;
+        }
+
+        .pillars-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+        }
+
+        .pillar-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            padding: 32px;
+            transition: border-color 0.3s, transform 0.3s;
+        }
+
+        .pillar-card:hover {
+            border-color: var(--primary);
+            transform: translateY(-5px);
+        }
+
+        .pillar-icon {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+        }
+
+        .pillar-card h3 {
+            font-size: 1.3rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+
+        .pillar-card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.65;
+        }
+
+        /* Tiers / Proposal Packages */
+        .tiers-section {
+            padding: 80px 6%;
+            background: rgba(15, 23, 42, 0.5);
+            border-top: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .tiers-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+            max-width: 1250px;
+            margin: 0 auto;
+        }
+
+        .tier-card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            padding: 38px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+        }
+
+        .tier-card.featured {
+            border-color: var(--primary);
+            box-shadow: 0 0 35px rgba(0, 243, 255, 0.18);
+        }
+
+        .tier-card .tag {
+            position: absolute;
+            top: 20px; right: 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #000;
+            font-weight: 800;
+            font-size: 0.75rem;
+            padding: 4px 12px;
+            border-radius: 12px;
+        }
+
+        .tier-card h3 {
+            font-size: 1.55rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .tier-card .price {
+            font-size: 2.1rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 20px;
+        }
+
+        .tier-features {
+            list-style: none;
+            margin-bottom: 30px;
+        }
+
+        .tier-features li {
+            font-size: 0.95rem;
+            color: #cbd5e1;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tier-features li::before {
+            content: '✓';
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        footer {
+            padding: 50px 6%;
+            text-align: center;
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        footer a { color: var(--primary); text-decoration: none; }
+
+        @media (max-width: 900px) {
+            .hero { grid-template-columns: 1fr; }
+            .form-row { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <a href="/" class="brand">
+            <span>DATACENTRAL</span>
+            <span class="badge-v3">v37.0.0</span>
+        </a>
+        <div class="nav-links">
+            <a href="/os">Neural OS</a>
+            <a href="/overlay">Overlay</a>
+            <a href="/agi.ms">AGI.ms</a>
+            <a href="/marketplace">Marketplace</a>
+            <a href="#lead-form" class="btn-nav">Request Demo v37</a>
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-text">
+            <span class="badge-v3" style="margin-bottom: 16px; display: inline-block;">DATACENTRAL CLOUD LLC // ENTERPRISE AI v37.0</span>
+            <h1>Autonomous AI Infrastructure & Geemini v37 Runtimes.</h1>
+            <p>Deploy deterministic, zero-bloat AI agents across bare-metal, Kubernetes, or sovereign cloud workstations. Scalable telemetry, sub-millisecond execution, and complete AST auditing.</p>
+
+            <div class="metrics-row">
+                <div class="metric-card">
+                    <div class="val">99.99%</div>
+                    <div class="lbl">Uptime SLA</div>
+                </div>
+                <div class="metric-card">
+                    <div class="val">&lt; 1.2ms</div>
+                    <div class="lbl">Telemetry Latency</div>
+                </div>
+                <div class="metric-card">
+                    <div class="val">10K+</div>
+                    <div class="lbl">Active Agent Nodes</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="lead-form-card" id="lead-form">
+            <div class="form-header">
+                <div>
+                    <h2>Request Enterprise Proposal</h2>
+                    <p>Schedule a technical architecture call or request custom agent deployment pricing.</p>
+                </div>
+                <span class="badge-v3">v37.0</span>
+            </div>
+
+            <form id="leadCaptureForm">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="fullName">Full Name *</label>
+                        <input type="text" id="fullName" name="fullName" placeholder="e.g. Andrew Middleton" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Work Email *</label>
+                        <input type="email" id="email" name="email" placeholder="andrew@organization.com" required>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="company">Company / Org *</label>
+                        <input type="text" id="company" name="company" placeholder="DataCentral Cloud LLC" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="interest">Primary Interest</label>
+                        <select id="interest" name="interest" onchange="calculateProposal()">
+                            <option value="Geemini Agent Runtime">Geemini Agent Runtime</option>
+                            <option value="Sovereign Cloud Infrastructure">Sovereign Cloud Hosting</option>
+                            <option value="Custom Agent Development">Custom AI Agent Development</option>
+                            <option value="AST Security & Audit">AST Security & Code Audit</option>
+                            <option value="Artemis-R Orbital Telemetry">Artemis-R Orbital Telemetry</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- v37 Interactive Calculator -->
+                <div class="calculator-panel">
+                    <h4>
+                        <span>Interactive Proposal Estimator</span>
+                        <span class="est-price" id="estPrice">$499 / mo</span>
+                    </h4>
+                    <div class="slider-row">
+                        <input type="range" id="nodeSlider" min="5" max="500" step="5" value="25" oninput="calculateProposal()">
+                        <span class="slider-val" id="nodeVal">25 Nodes</span>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="message">Project Requirements / Notes</label>
+                    <textarea id="message" name="message" rows="3" placeholder="Tell us about your agent workloads, LLM providers, or latency requirements..."></textarea>
+                </div>
+
+                <button type="submit" class="btn-submit" id="submitBtn">Submit Lead Inquiry &rarr;</button>
+                <div id="form-response"></div>
+            </form>
+        </div>
+    </header>
+
+    <section class="pillars-section">
+        <div class="section-title">
+            <h2>Why Enterprise Teams Build with DataCentral v37</h2>
+            <p>Engineered for mission-critical reliability, deterministic AI execution, and full source code transparency.</p>
+        </div>
+
+        <div class="pillars-grid">
+            <div class="pillar-card">
+                <div class="pillar-icon">⚡</div>
+                <h3>Geemini v37 Micro-Runtime</h3>
+                <p>Modular, lightweight agent loops with explicit message passing, zero state black-boxes, and native tool execution.</p>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-icon">🌐</div>
+                <h3>DataCentral Sovereign Cloud</h3>
+                <p>Run locally, on-prem, or across dedicated cloud workstations with encrypted DTN and interstellar data links.</p>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-icon">🛡️</div>
+                <h3>Continuous AST Security</h3>
+                <p>Automated vulnerability scanning, memory inspection, and threat detection built into every agent loop.</p>
+            </div>
+            <div class="pillar-card">
+                <div class="pillar-icon">📊</div>
+                <h3>Real-Time Telemetry v37</h3>
+                <p>Sub-millisecond visualizer graphs, live matrix streams, and instant JSON API exports via NetworkBuster.</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="tiers-section">
+        <div class="section-title">
+            <h2>Deployment Tier Options v37.0</h2>
+            <p>Select the execution model that fits your operational requirements.</p>
+        </div>
+
+        <div class="tiers-grid">
+            <div class="tier-card">
+                <h3>Developer / OSS</h3>
+                <div class="price">Self-Hosted</div>
+                <ul class="tier-features">
+                    <li>Full Geemini open runtime</li>
+                    <li>Vite + Express CLI template</li>
+                    <li>Community support & GitHub issues</li>
+                    <li>Local-first SQLite state</li>
+                </ul>
+                <a href="/os" class="btn-nav" style="text-align:center; display:block;">Access OS</a>
+            </div>
+
+            <div class="tier-card featured">
+                <span class="tag">RECOMMENDED</span>
+                <h3>Managed Cloud</h3>
+                <div class="price">Custom SLA</div>
+                <ul class="tier-features">
+                    <li>Managed DataCentral Cloud nodes</li>
+                    <li>Sub-millisecond telemetry stream</li>
+                    <li>Azure AI Foundry & Gemini relays</li>
+                    <li>24/7 Monitoring & uptime guarantee</li>
+                    <li>Dedicated agent cluster scaling</li>
+                </ul>
+                <a href="#lead-form" class="btn-submit" style="text-align:center; text-decoration:none; display:block;">Request Proposal</a>
+            </div>
+
+            <div class="tier-card">
+                <h3>Sovereign Cluster</h3>
+                <div class="price">Enterprise</div>
+                <ul class="tier-features">
+                    <li>Dedicated bare-metal hardware</li>
+                    <li>Custom agent architecture & tools</li>
+                    <li>Air-gapped security & DTN relay</li>
+                    <li>Direct engineering team access</li>
+                </ul>
+                <a href="#lead-form" class="btn-nav" style="text-align:center; display:block;">Contact Sales</a>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2026 DataCentral Cloud LLC v37.0 &bull; NetworkBuster Neural OS &bull; <a href="/agi.ms">AGI.ms</a> &bull; <a href="/">Homepage</a></p>
+    </footer>
+
+    <script>
+        function calculateProposal() {
+            const nodes = parseInt(document.getElementById('nodeSlider').value);
+            document.getElementById('nodeVal').innerText = `${nodes} Nodes`;
+            
+            const interest = document.getElementById('interest').value;
+            let baseRate = 18;
+            if (interest.includes('Sovereign')) baseRate = 35;
+            if (interest.includes('Custom')) baseRate = 45;
+            if (interest.includes('Security')) baseRate = 25;
+
+            const total = Math.max(199, Math.round(nodes * baseRate + 149));
+            document.getElementById('estPrice').innerText = `$${total.toLocaleString()} / mo`;
+        }
+
+        document.getElementById('leadCaptureForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            const submitBtn = document.getElementById('submitBtn');
+            const respDiv = document.getElementById('form-response');
+
+            submitBtn.disabled = true;
+            submitBtn.innerText = 'Transmitting Lead Data v37...';
+            respDiv.className = '';
+            respDiv.style.display = 'none';
+
+            const payload = {
+                fullName: document.getElementById('fullName').value,
+                email: document.getElementById('email').value,
+                company: document.getElementById('company').value,
+                interest: document.getElementById('interest').value,
+                nodesEstimated: document.getElementById('nodeSlider').value,
+                estimatedPrice: document.getElementById('estPrice').innerText,
+                message: document.getElementById('message').value,
+                version: '3.0.0',
+                submittedAt: new Date().toISOString()
+            };
+
+            try {
+                const res = await fetch('/api/leads', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const data = await res.json();
+
+                if (res.ok) {
+                    respDiv.className = 'success';
+                    respDiv.innerText = `✓ Inquiry Received! Confirmation ID: ${data.leadId}\nEstimated Proposal: ${payload.estimatedPrice} for ${payload.nodesEstimated} Nodes.\nOur architecture team will be in touch shortly.`;
+                    document.getElementById('leadCaptureForm').reset();
+                    calculateProposal();
+                } else {
+                    respDiv.className = 'error';
+                    respDiv.innerText = `Error: ${data.error || 'Submission failed'}`;
+                }
+            } catch (err) {
+                respDiv.className = 'error';
+                respDiv.innerText = `Network error transmitting inquiry: ${err.message}`;
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.innerText = 'Submit Lead Inquiry →';
+            }
+        });
+
+        calculateProposal();
+    </script>
+</body>
+</html>

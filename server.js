@@ -108,7 +108,12 @@ const HTML_ROUTES = {
   '/agi.ms': 'agi_cinematic_overlay.html',
   '/agi': 'agi_cinematic_overlay.html',
   '/agims': 'agi_cinematic_overlay.html',
-  '/datacentral-cloud-llc': 'agi_cinematic_overlay.html'
+  '/datacentral-cloud-llc': 'agi_cinematic_overlay.html',
+  '/leads': 'leads.html',
+  '/lead': 'leads.html',
+  '/demo': 'leads.html',
+  '/schedule-demo': 'leads.html',
+  '/contact-sales': 'leads.html'
 };
 
 Object.entries(HTML_ROUTES).forEach(([route, file]) => {
@@ -267,6 +272,47 @@ app.post('/api/commands', (request, response) => {
   }
 
   response.json({ result: `Command received: ${message}` });
+});
+
+// Lead Submission & Proposal Request Endpoint
+const leadsMemoryStore = [];
+
+app.post('/api/leads', (req, res) => {
+  const { fullName, email, company, interest, teamSize, message } = req.body || {};
+
+  if (!fullName || !email || !company) {
+    return res.status(400).json({ error: 'Full name, work email, and company/organization are required.' });
+  }
+
+  const leadId = `LEAD-${Date.now().toString(36).toUpperCase()}-${Math.floor(Math.random() * 1000)}`;
+  const newLead = {
+    leadId,
+    fullName: String(fullName).trim(),
+    email: String(email).trim(),
+    company: String(company).trim(),
+    interest: String(interest || 'General AI Infrastructure').trim(),
+    teamSize: String(teamSize || 'Unspecified').trim(),
+    message: String(message || '').trim(),
+    status: 'new',
+    submittedAt: new Date().toISOString()
+  };
+
+  leadsMemoryStore.push(newLead);
+  console.log(`📥 [DataCentral Lead Captured] ID: ${leadId} | Name: ${newLead.fullName} (${newLead.company}) | Email: ${newLead.email}`);
+
+  res.status(201).json({
+    status: 'success',
+    message: 'Lead inquiry recorded successfully.',
+    leadId,
+    timestamp: newLead.submittedAt
+  });
+});
+
+app.get('/api/leads', (req, res) => {
+  res.json({
+    count: leadsMemoryStore.length,
+    leads: leadsMemoryStore
+  });
 });
 
 // Search API Endpoint (supports SEARCH_API_KEY, BING_SEARCH_API_KEY, GOOGLE_SEARCH_API_KEY, YOUTUBE_API_KEY)

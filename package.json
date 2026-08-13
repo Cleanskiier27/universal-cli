@@ -1,6 +1,6 @@
 {
   "name": "networkbuster-server",
-  "version": "1.0.1",
+  "version": "37.0.0",
   "type": "module",
   "description": "Production server for networkbuster apps",
   "main": "server.js",

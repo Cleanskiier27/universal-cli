@@ -86,13 +86,14 @@ export default function App() {
           <a href="/flash-commands.html">FLASH COMMANDS</a>
           <a href="/overlay">OVERLAY</a>
           <a href="/agi.ms">AGI.MS</a>
+          <a href="/leads" style={{ color: "#00ff88", fontWeight: "bold" }}>PROPOSAL / DEMO</a>
           <span className="live-indicator">LIVE</span>
         </div>
       </nav>
 
       <header className="masthead">
         <div id="top">
-          <p className="eyebrow">PRECISELIENS // VITE EXPRESS CLI</p>
+          <p className="eyebrow">PRECISELIENS // VITE EXPRESS CLI v37.0</p>
           <h1>Command the build surface.</h1>
           <p className="summary">
             A local mission-control interface for the Vite client, Express API,
@@ -103,6 +104,7 @@ export default function App() {
             <a className="primary-link secondary" href="/flash-commands.html">Flash Commands</a>
             <a className="primary-link tertiary" href="/overlay">Open Overlay</a>
             <a className="primary-link" style={{ background: "#9d00ff", borderColor: "#00f3ff", color: "#ffffff" }} href="/agi.ms">AGI.ms</a>
+            <a className="primary-link" style={{ background: "#00ff88", borderColor: "#00f3ff", color: "#000000" }} href="/leads">Request Proposal</a>
             <span>LOCAL OPERATIONAL LAYER</span>
           </div>
         </div>
@@ -238,7 +240,7 @@ export default function App() {
       </section>
 
       <footer>
-        <span>PRECISELIENS LOCAL SYSTEMS // DATACENTRAL CLOUD LLC (AGI.MS)</span>
+        <span>PRECISELIENS LOCAL SYSTEMS v37.0 &bull; DATACENTRAL CLOUD LLC (AGI.MS)</span>
         <span>NODE // EXPRESS // REACT</span>
       </footer>
     </main>

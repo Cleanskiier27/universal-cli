@@ -1,6 +1,6 @@
 {
   "name": "vite-express-cli",
-  "version": "1.0.0",
+  "version": "37.0.0",
   "private": true,
   "type": "module",
   "description": "A Vite, Express, and Node.js CLI starter application.",
