@@ -28,7 +28,7 @@ const proxy = httpProxy.createProxyServer({});
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
-const HOST = process.env.HOST || '192.168.68.54';
+const HOST = process.env.HOST || '0.0.0.0';
 const VITE_EXPRESS_DIST = path.join(__dirname, 'vite-express-cli', 'dist');
 
 // Trust Azure/ingress proxy
@@ -116,20 +116,31 @@ const HTML_ROUTES = {
   '/contact-sales': 'leads.html'
 };
 
+// dotfiles: 'allow' avoids false 404s when the repo checkout path itself
+// contains a dot-segment (e.g. ".copilot"), which `send` otherwise treats
+// as a hidden file and rejects regardless of the actual target file.
+function sendFileSafe(res, filePath) {
+  res.sendFile(filePath, { dotfiles: 'allow' }, (err) => {
+    if (err && !res.headersSent) {
+      res.status(err.status || 404).send('Not found');
+    }
+  });
+}
+
 Object.entries(HTML_ROUTES).forEach(([route, file]) => {
   app.get(route, (req, res) => {
-    res.sendFile(path.join(__dirname, file));
+    sendFileSafe(res, path.join(__dirname, file));
   });
 });
 
 // Built Overlay World View
 app.get('/worldview', (req, res) => {
-  res.sendFile(path.join(__dirname, 'challengerepo/real-time-overlay/dist/index.html'));
+  sendFileSafe(res, path.join(__dirname, 'challengerepo/real-time-overlay/dist/index.html'));
 });
 
 // Cloud-Code Console (Search-Console-style analytics: Performance, Income Tracker, Pages, Sitemaps, Links, Settings)
 app.get(['/cloud-code', '/console'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'cloud-code/dist/index.html'));
+  sendFileSafe(res, path.join(__dirname, 'cloud-code/dist/index.html'));
 });
 
 // ============================================

@@ -99,7 +99,9 @@ const MISSION_PROXIES = {
 };
 
 Object.entries(MISSION_PROXIES).forEach(([prefix, target]) => {
-  app.all(`${prefix}*`, (req, res) => {
+  // path-to-regexp v8 (bundled with Express 5) requires named wildcards,
+  // so a bare trailing '*' throws "Missing parameter name" at startup.
+  app.all(`${prefix}*splat`, (req, res) => {
     // If request is for /api/mission/status, we want to proxy to http://localhost:5000/status
     const targetUrl = req.url.replace(prefix, '') || '/';
     proxy.web(req, res, { target, ignorePath: true, changeOrigin: true, toProxy: true }, (err) => {
@@ -127,9 +129,21 @@ const HTML_ROUTES = {
   '/contact-sales': 'leads.html'
 };
 
+// dotfiles: 'allow' avoids false 404s when the repo checkout path itself
+// contains a dot-segment (e.g. ".copilot"), which `send` otherwise treats
+// as a hidden file and rejects regardless of the actual target file.
+function sendFileSafe(res, filePath, onError) {
+  res.sendFile(filePath, { dotfiles: 'allow' }, (err) => {
+    if (err && !res.headersSent) {
+      if (onError) onError(err);
+      else res.status(err.status || 404).send('Not found');
+    }
+  });
+}
+
 Object.entries(HTML_ROUTES).forEach(([route, file]) => {
   app.get(route, (req, res) => {
-    res.sendFile(path.join(__dirname, file));
+    sendFileSafe(res, path.join(__dirname, file));
   });
 });
 
@@ -378,24 +392,24 @@ const challengeOverlayPath = path.join(__dirname, 'challengerepo/real-time-overl
 
 // Preciseliens Visualizations
 app.get('/cinematic', (req, res) => {
-  res.sendFile(path.join(__dirname, 'preciseliens_cinematic.html'));
+  sendFileSafe(res, path.join(__dirname, 'preciseliens_cinematic.html'));
 });
 
 app.get('/marketplace', (req, res) => {
-  res.sendFile(path.join(__dirname, 'MARKETPLACE_EXAMPLE.html'));
+  sendFileSafe(res, path.join(__dirname, 'MARKETPLACE_EXAMPLE.html'));
 });
 
 app.get('/tracking', (req, res) => {
-  res.sendFile(path.join(__dirname, 'world_tracking.html'));
+  sendFileSafe(res, path.join(__dirname, 'world_tracking.html'));
 });
 
 app.get('/worldview', (req, res) => {
-  res.sendFile(challengeOverlayPath);
+  sendFileSafe(res, challengeOverlayPath);
 });
 
 // Cloud-Code Console (Search-Console-style analytics: Performance, Income Tracker, Pages, Sitemaps, Links, Settings)
 app.get(['/cloud-code', '/console'], (req, res) => {
-  res.sendFile(path.join(__dirname, 'cloud-code/dist/index.html'));
+  sendFileSafe(res, path.join(__dirname, 'cloud-code/dist/index.html'));
 });
 
 // AI Robot endpoint using Azure OpenAI (set AZURE_OPENAI_ENDPOINT, AZURE_OPENAI_KEY, AZURE_OPENAI_DEPLOYMENT)
@@ -446,25 +460,19 @@ app.post('/api/robot', async (req, res) => {
 
 app.get(/^\/dashboard(.*)$/, (req, res) => {
   res.set('Cache-Control', 'public, max-age=3600');
-  res.sendFile(dashboardPath, (err) => {
-    if (err) {
-      res.status(404).json({ error: 'Dashboard not found' });
-    }
+  sendFileSafe(res, dashboardPath, () => {
+    res.status(404).json({ error: 'Dashboard not found' });
   });
 });
 
 // AI World / Overlay page
 app.get(/^\/overlay(.*)$/, (req, res) => {
   res.set('Cache-Control', 'public, max-age=3600');
-  res.sendFile(overlayPath, (err) => {
-    if (err) {
-      // Fallback to challenge repo version
-      res.sendFile(challengeOverlayPath, (err2) => {
-        if (err2) {
-          res.status(404).json({ error: 'Overlay not found' });
-        }
-      });
-    }
+  sendFileSafe(res, overlayPath, () => {
+    // Fallback to challenge repo version
+    sendFileSafe(res, challengeOverlayPath, () => {
+      res.status(404).json({ error: 'Overlay not found' });
+    });
   });
 });
 
