@@ -114,6 +114,7 @@ export default function App() {
           <a href="#operations">OPERATIONS</a>
           <a href="/flash-commands.html">FLASH COMMANDS</a>
           <a href="/overlay">OVERLAY</a>
+          <a href="/agi.ms">AGI.MS</a>
           <span className="live-indicator">LIVE</span>
         </div>
       </nav>
@@ -130,6 +131,7 @@ export default function App() {
             <a className="primary-link" href="#command-deck">Open command deck</a>
             <a className="primary-link secondary" href="/flash-commands.html">Flash Commands</a>
             <a className="primary-link tertiary" href="/overlay">Open Overlay</a>
+            <a className="primary-link" style={{ background: "#9d00ff", borderColor: "#00f3ff", color: "#ffffff" }} href="/agi.ms">AGI.ms</a>
             <span>LOCAL OPERATIONAL LAYER</span>
           </div>
         </div>
@@ -265,7 +267,7 @@ export default function App() {
       </section>
 
       <footer>
-        <span>PRECISELIENS LOCAL SYSTEMS</span>
+        <span>PRECISELIENS LOCAL SYSTEMS // DATACENTRAL CLOUD LLC (AGI.MS)</span>
         <span>NODE // EXPRESS // REACT</span>
       </footer>
     </main>
