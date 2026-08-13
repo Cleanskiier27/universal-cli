@@ -13,3 +13,4 @@ public_dist/
 .datacentra/
 .env.*
 !.env.example
+node_modules

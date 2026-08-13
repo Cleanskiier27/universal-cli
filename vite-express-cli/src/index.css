@@ -185,6 +185,19 @@ h1 {
   box-shadow: 0 0 1.4rem rgb(0 240 255 / 32%);
 }
 
+.primary-link.secondary {
+  border-color: #9d50bb;
+  background: #9d50bb;
+  box-shadow: 0 0 1.4rem rgb(157 80 187 / 32%);
+}
+
+.primary-link.tertiary {
+  border-color: #00ff9d;
+  background: transparent;
+  color: #00ff9d;
+  box-shadow: 0 0 1.2rem rgb(0 255 157 / 18%);
+}
+
 .primary-link:hover {
   box-shadow: 0 0 2rem rgb(0 240 255 / 70%);
 }

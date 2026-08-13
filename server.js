@@ -29,6 +29,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const app = express();
 const PORT = process.env.PORT || 3000;
 const HOST = process.env.HOST || '192.168.68.54';
+const VITE_EXPRESS_DIST = path.join(__dirname, 'vite-express-cli', 'dist');
 
 // Trust Azure/ingress proxy
 app.set('trust proxy', 1);
@@ -103,7 +104,11 @@ const HTML_ROUTES = {
   '/music': 'music-studio.html',
   '/cinematic': 'preciseliens_cinematic.html',
   '/marketplace': 'MARKETPLACE_EXAMPLE.html',
-  '/tracking': 'world_tracking.html'
+  '/tracking': 'world_tracking.html',
+  '/agi.ms': 'agi_cinematic_overlay.html',
+  '/agi': 'agi_cinematic_overlay.html',
+  '/agims': 'agi_cinematic_overlay.html',
+  '/datacentral-cloud-llc': 'agi_cinematic_overlay.html'
 };
 
 Object.entries(HTML_ROUTES).forEach(([route, file]) => {
@@ -170,6 +175,100 @@ app.post('/api/gemini/chat', async (request, response) => {
   }
 });
 
+function getFoundryChatEndpoint() {
+  const endpoint = process.env.AZURE_AI_FOUNDRY_ENDPOINT?.replace(/\/+$/, '');
+
+  if (!endpoint) {
+    return null;
+  }
+
+  return endpoint.endsWith('/openai/v1')
+    ? `${endpoint}/chat/completions`
+    : `${endpoint}/openai/v1/chat/completions`;
+}
+
+app.post('/api/copilot/chat', async (request, response) => {
+  const apiKey = process.env.AZURE_AI_FOUNDRY_API_KEY;
+  const deployment = process.env.AZURE_AI_FOUNDRY_DEPLOYMENT;
+  const endpoint = getFoundryChatEndpoint();
+  const messages = request.body?.messages;
+
+  if (!apiKey || !deployment || !endpoint) {
+    return response.status(503).json({
+      error: 'Azure AI Foundry chat is not configured on this server.'
+    });
+  }
+
+  if (!Array.isArray(messages) || messages.length === 0 || messages.length > 20) {
+    return response.status(400).json({
+      error: 'Provide between 1 and 20 chat messages.'
+    });
+  }
+
+  const validMessages = messages.every(({ role, content }) =>
+    ['user', 'assistant'].includes(role) &&
+    typeof content === 'string' &&
+    content.trim().length > 0 &&
+    content.length <= 4000
+  );
+
+  if (!validMessages) {
+    return response.status(400).json({
+      error: 'Messages must have a user or assistant role and contain up to 4000 characters.'
+    });
+  }
+
+  try {
+    const foundryResponse = await fetch(endpoint, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'api-key': apiKey
+      },
+      body: JSON.stringify({
+        model: deployment,
+        messages: [
+          {
+            role: 'system',
+            content: 'You are Mission Copilot, a concise assistant for a Vite, Express, and CLI application.'
+          },
+          ...messages
+        ]
+      })
+    });
+    const payload = await foundryResponse.json();
+
+    if (!foundryResponse.ok || !payload.choices?.[0]?.message?.content) {
+      console.error('Azure AI Foundry request failed:', payload);
+      return response.status(502).json({
+        error: 'Azure AI Foundry could not complete the chat request.'
+      });
+    }
+
+    response.json({
+      content: payload.choices[0].message.content,
+      model: payload.model ?? deployment
+    });
+  } catch (error) {
+    console.error('Azure AI Foundry request failed:', error.message);
+    response.status(502).json({
+      error: 'Azure AI Foundry could not be reached.'
+    });
+  }
+});
+
+app.post('/api/commands', (request, response) => {
+  const message = typeof request.body?.message === 'string'
+    ? request.body.message.trim()
+    : '';
+
+  if (!message) {
+    return response.status(400).json({ error: 'A message is required.' });
+  }
+
+  response.json({ result: `Command received: ${message}` });
+});
+
 // ============================================
 // STATIC ASSETS & FALLBACKS
 // ============================================
@@ -177,6 +276,7 @@ app.post('/api/gemini/chat', async (request, response) => {
 // Static file serving
 app.use('/overlay', express.static(path.join(__dirname, 'challengerepo/real-time-overlay/dist')));
 app.use('/dashboard', express.static(path.join(__dirname, 'dashboard/dist')));
+app.use(express.static(VITE_EXPRESS_DIST));
 app.use(express.static(path.join(__dirname, 'web-app')));
 app.use(express.static(__dirname)); // Serve root files as static if no route matches
 
@@ -187,7 +287,7 @@ app.get('/api/health', (req, res) => {
 
 // 404 handler
 app.use((req, res) => {
-  res.status(404).json({ error: 'Not found', path: req.path, hint: 'Try /os or /cinematic' });
+  res.status(404).json({ error: 'Not found', path: req.path, hint: 'Try the homepage or /os.' });
 });
 
 // Start server

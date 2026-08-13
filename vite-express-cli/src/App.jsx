@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { sendPayloadCommand, exportPayloadText, sendCopilotChat } from "./tools/index.js";
 
 export default function App() {
   const [health, setHealth] = useState("Checking API...");
@@ -33,17 +34,7 @@ export default function App() {
     setLastMessage(message);
 
     try {
-      const response = await fetch("/api/commands", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ message })
-      });
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error ?? "Command failed");
-      }
-
+      const data = await sendPayloadCommand(message);
       setResult(data.result);
       setMessage("");
     } catch (error) {
@@ -52,15 +43,7 @@ export default function App() {
   }
 
   function exportText(kind, content) {
-    const timestamp = new Date().toISOString().replaceAll(":", "-");
-    const blob = new Blob([content], { type: "text/plain;charset=utf-8" });
-    const downloadUrl = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-
-    link.href = downloadUrl;
-    link.download = `preciseliens-${kind}-${timestamp}.txt`;
-    link.click();
-    URL.revokeObjectURL(downloadUrl);
+    exportPayloadText(kind, content);
   }
 
   async function submitChat(event) {
@@ -78,19 +61,7 @@ export default function App() {
     setChatLoading(true);
 
     try {
-      const response = await fetch("/api/copilot/chat", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          messages: nextMessages.map(({ role, content }) => ({ role, content }))
-        })
-      });
-      const data = await response.json();
-
-      if (!response.ok) {
-        throw new Error(data.error ?? "Mission Copilot could not respond.");
-      }
-
+      const data = await sendCopilotChat(nextMessages);
       setChatMessages((currentMessages) => [
         ...currentMessages,
         { role: "assistant", content: data.content }
@@ -112,6 +83,9 @@ export default function App() {
         <div className="nav-links">
           <a href="#command-deck">COMMAND</a>
           <a href="#operations">OPERATIONS</a>
+          <a href="/flash-commands.html">FLASH COMMANDS</a>
+          <a href="/overlay">OVERLAY</a>
+          <a href="/agi.ms">AGI.MS</a>
           <span className="live-indicator">LIVE</span>
         </div>
       </nav>
@@ -126,6 +100,9 @@ export default function App() {
           </p>
           <div className="hero-actions">
             <a className="primary-link" href="#command-deck">Open command deck</a>
+            <a className="primary-link secondary" href="/flash-commands.html">Flash Commands</a>
+            <a className="primary-link tertiary" href="/overlay">Open Overlay</a>
+            <a className="primary-link" style={{ background: "#9d00ff", borderColor: "#00f3ff", color: "#ffffff" }} href="/agi.ms">AGI.ms</a>
             <span>LOCAL OPERATIONAL LAYER</span>
           </div>
         </div>
@@ -261,7 +238,7 @@ export default function App() {
       </section>
 
       <footer>
-        <span>PRECISELIENS LOCAL SYSTEMS</span>
+        <span>PRECISELIENS LOCAL SYSTEMS // DATACENTRAL CLOUD LLC (AGI.MS)</span>
         <span>NODE // EXPRESS // REACT</span>
       </footer>
     </main>

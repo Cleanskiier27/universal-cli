@@ -115,7 +115,11 @@ const HTML_ROUTES = {
   '/music': 'music-studio.html',
   '/cinematic': 'preciseliens_cinematic.html',
   '/marketplace': 'MARKETPLACE_EXAMPLE.html',
-  '/tracking': 'world_tracking.html'
+  '/tracking': 'world_tracking.html',
+  '/agi.ms': 'agi_cinematic_overlay.html',
+  '/agi': 'agi_cinematic_overlay.html',
+  '/agims': 'agi_cinematic_overlay.html',
+  '/datacentral-cloud-llc': 'agi_cinematic_overlay.html'
 };
 
 Object.entries(HTML_ROUTES).forEach(([route, file]) => {
