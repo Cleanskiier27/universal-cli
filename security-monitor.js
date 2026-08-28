@@ -9,12 +9,76 @@ import express from 'express';
 import os from 'os';
 import { exec } from 'child_process';
 import { promisify } from 'util';
+import net from 'net';
 
 const execAsync = promisify(exec);
 const app = express();
 const PORT = process.env.SECURITY_PORT || 3006;
+const ADMIN_TOKEN = process.env.SECURITY_ADMIN_TOKEN || '';
 
 app.use(express.json());
+
+// ============================================
+// ADMIN AUTHENTICATION
+// ============================================
+// State-changing endpoints (unblocking IPs, clearing alerts) require a
+// shared secret supplied via the `x-admin-token` header. If no token is
+// configured, admin actions are disabled by default (fail closed) rather
+// than left open to anyone who can reach this service.
+function requireAdmin(req, res, next) {
+  if (!ADMIN_TOKEN) {
+    return res.status(503).json({
+      error: 'Admin actions disabled',
+      reason: 'SECURITY_ADMIN_TOKEN is not configured on this server'
+    });
+  }
+
+  const provided = req.headers['x-admin-token'];
+  if (provided !== ADMIN_TOKEN) {
+    return res.status(401).json({ error: 'Unauthorized' });
+  }
+
+  next();
+}
+
+// ============================================
+// SIMPLE RATE LIMITING (no external dependency)
+// ============================================
+const RATE_LIMIT_WINDOW_MS = 60000;
+const RATE_LIMIT_MAX_REQUESTS = 120;
+const requestCounts = new Map();
+
+function rateLimit(req, res, next) {
+  const ip = req.ip || req.socket.remoteAddress || 'unknown';
+  const now = Date.now();
+  const entry = requestCounts.get(ip) || { count: 0, windowStart: now };
+
+  if (now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+    entry.count = 0;
+    entry.windowStart = now;
+  }
+
+  entry.count++;
+  requestCounts.set(ip, entry);
+
+  if (entry.count > RATE_LIMIT_MAX_REQUESTS) {
+    return res.status(429).json({ error: 'Too many requests', retryAfterMs: RATE_LIMIT_WINDOW_MS });
+  }
+
+  next();
+}
+
+// Periodically clear stale rate-limit entries to bound memory growth.
+setInterval(() => {
+  const now = Date.now();
+  for (const [ip, entry] of requestCounts.entries()) {
+    if (now - entry.windowStart > RATE_LIMIT_WINDOW_MS) {
+      requestCounts.delete(ip);
+    }
+  }
+}, RATE_LIMIT_WINDOW_MS).unref();
+
+app.use('/api/security', rateLimit);
 
 // Security State with Emoji Status Indicators
 const securityState = {
@@ -173,7 +237,7 @@ function triggerAmberAlert(threat) {
 
 // Security Middleware for Express Apps
 function securityMiddleware(req, res, next) {
-  const ip = req.ip || req.connection.remoteAddress || 'unknown';
+  const ip = req.ip || req.socket.remoteAddress || 'unknown';
   
   // Check IP reputation
   const repCheck = checkIPReputation(ip);
@@ -308,8 +372,13 @@ app.get('/api/security/blocked-ips', (req, res) => {
 });
 
 // Unblock IP (Admin only)
-app.post('/api/security/unblock/:ip', (req, res) => {
+app.post('/api/security/unblock/:ip', requireAdmin, (req, res) => {
   const ip = req.params.ip;
+
+  if (net.isIP(ip) === 0) {
+    return res.status(400).json({ error: 'Invalid IP address format' });
+  }
+
   if (securityState.blockedIPs.has(ip)) {
     securityState.blockedIPs.delete(ip);
     res.json({ success: true, message: `IP ${ip} unblocked`, status: '🟢' });
@@ -318,8 +387,8 @@ app.post('/api/security/unblock/:ip', (req, res) => {
   }
 });
 
-// Clear Alerts
-app.post('/api/security/alerts/clear', (req, res) => {
+// Clear Alerts (Admin only)
+app.post('/api/security/alerts/clear', requireAdmin, (req, res) => {
   const clearedCount = securityState.alerts.length;
   securityState.alerts = [];
   securityState.activeThreats = 0;
@@ -410,8 +479,8 @@ Endpoints:
   GET  /api/security/hack-attempts   - Logged hack attempts
   GET  /api/security/timeline        - Past-future-present timeline
   GET  /api/security/blocked-ips     - List of blocked IPs
-  POST /api/security/unblock/:ip     - Unblock an IP address
-  POST /api/security/alerts/clear    - Clear all alerts
+  POST /api/security/unblock/:ip     - Unblock an IP address (requires x-admin-token)
+  POST /api/security/alerts/clear    - Clear all alerts (requires x-admin-token)
 
 Monitoring active. All threats will be logged and blocked.
 `);
